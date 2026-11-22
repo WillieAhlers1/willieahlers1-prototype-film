@@ -71,12 +71,6 @@ Generated prototypes and films receive portable brand snapshots. Updating worksp
 rebrand already-approved concepts or narration. Regenerate/review explicitly when changing their identity.
 Never modify the installed skill or rely on attachment paths that disappear between sessions.
 
-## Optional legacy import
-
-```text
-python <skill>/assets/brand_setup.py import-tredence --output <review-folder>
-```
-
-Review the generated intake, verify permissions and messaging, and set `asset_permissions=true` before approved
-setup. This is an explicit brand choice, never a default. Keep the old workspace runtime/models until migration
-has been verified.
+No brand-specific imports or asset bundles ship with the skill. Supply an approved intake for every workspace.
+If reusing existing voice models, select their directory explicitly through runtime configuration, separately
+from brand setup.

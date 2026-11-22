@@ -18,7 +18,7 @@ def create(workspace, name):
     skill = Path(__file__).resolve().parent
     output.mkdir(parents=True)
     shutil.copytree(skill / "kit", output / "kit",
-                    ignore=shutil.ignore_patterns("brand", "fonts", "photos", "__pycache__"))
+                    ignore=shutil.ignore_patterns("__pycache__"))
     shutil.copy2(skill / "starter.html", output / "prototype.html")
     install_brand(manifest, output)
     return output

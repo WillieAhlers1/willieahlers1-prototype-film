@@ -5,12 +5,12 @@ Product scenes show the proof. A frame is not a slide per capability or a recap 
 
 The workspace manifest supplies palette, typography, logo variants, imagery, tagline and sign-off.
 `brand.js` loads before `kit/proto-style.js`; `brand.css` loads after it.
-The shared layout names `td-cover`, `td-content`, `td-section`, `td-divider`, `td-ask`, `td-closing` and `td-*`
-tokens remain compatibility aliases; they do not select Tredence or require its template identity.
+The generic layout classes `bf-cover`, `bf-content`, `bf-section`, `bf-divider`, `bf-ask` and `bf-closing`
+do not select a brand identity. All identity values come from the approved workspace manifest.
 
 ## Layout
 
-Use `<section class="scene frame td-content">` and the frame outlines in `assets/frames.html`.
+Use `<section class="scene frame bf-content">` and the frame outlines in `assets/frames.html`.
 The kit creates generic brand chrome from approved configuration. Don't draw a second logo/footer over it.
 At the 1920x1080 stage, keep content above approximately y=995 and clear of the logo, top rule and concept footer.
 Text sits in separately positioned elements over simple boxes; do not hide prose under chrome.
@@ -26,8 +26,8 @@ Pick logo variants appropriate to the background. Text-only identity must be exp
 
 ## Tokens and type
 
-Frame tokens: `--brand-accent`, `--brand-background`, `--brand-foreground`, `--brand-muted`, `--td-font`.
-Existing `--td-*` color aliases map to these approved values. Product Fluent tokens are unchanged.
+Frame tokens: `--brand-accent`, `--brand-background`, `--brand-foreground`, `--brand-muted`, `--brand-font`.
+These tokens carry approved values directly. Product Fluent tokens are unchanged.
 Use the configured font; locally supplied font files are packed. System fonts require explicit acceptance.
 Prefer headlines around 48-72px, supporting text around 24-32px and labels at least 18px on frame scenes.
 Keep contrast readable, sentence case natural, and content brief enough to understand from the room's back.

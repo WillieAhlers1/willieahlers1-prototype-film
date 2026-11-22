@@ -1,4 +1,4 @@
-/* prototype-tredence scene engine (upstream prototype-frontier 1.14.8).  Don't edit per prototype.
+/* prototype-film scene engine (upstream prototype-frontier 1.14.8). Don't edit per prototype.
    Scenes:  <section class="scene" id="..." data-title="..."> ... <aside class="notes">what the presenter says</aside></section>
    Beats:   data-beat="1..n" reveals an element on the nth "next"; add data-auto="ms" to play it automatically
             that long after the previous beat, counted from when the previous beat's text has finished streaming.

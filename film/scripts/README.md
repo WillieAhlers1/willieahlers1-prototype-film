@@ -1,7 +1,7 @@
 # Film scripts (prototype-film)
 
 The pipeline turns an approved, packed concept prototype into a narrated, captioned 1080p MP4.
-Brand graphics, font assets and pronunciations come from the workspace snapshot, not a fixed legacy identity.
+Brand graphics, font assets and pronunciations come from the approved workspace snapshot.
 
 ## Build folder
 
@@ -15,7 +15,7 @@ A changed brand requires explicit approval before refresh. Keep workspace runtim
 disposable frame/encode directories.
 Use `--update-brand` after approval to change the snapshot without resetting narration; `--force` also replaces
 editable inputs. `--brand <manifest>` is an alternative to `--workspace`, and a standalone packed prototype
-contains a recoverable snapshot. Legacy examples require explicit selection of the Tredence identity.
+contains a recoverable snapshot. No brand-specific examples or imports are provided.
 
 - `brand/brand.json`, referenced assets, `brand.js`, `brand.css`: portable approved identity.
 - `graphics.html`, `gfx-data.js`: shared layout and story-specific graphics.
@@ -44,7 +44,7 @@ contains a recoverable snapshot. Legacy examples require explicit selection of t
 
 Re-record/re-encode only affected segments: `python record_all.py work/rec.log P3`;
 `python assemble.py segs P3`.
-Legacy `plan.py`/press schedules and Node recording remain explicit compatibility paths, not a claim of
+`plan.py`/press schedules and Node recording remain explicit compatibility paths, not a claim of
 prototype-clock capture.
 Select compatibility explicitly with `--capture-mode compatibility`. Python Playwright frame-clock recording
 is the default; Node recording does not claim that capability. Use a separate segment preview to inspect a

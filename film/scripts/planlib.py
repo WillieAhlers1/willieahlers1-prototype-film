@@ -1,6 +1,6 @@
 """Helpers for a film's timing plan.
 
-A film's plan script (templates/plan_template.py, or examples/woodgrove-sample/plan.py) creates a Plan,
+A film's plan script (templates/plan_template.py) creates a Plan,
 describes its segments, and calls write(). Segments alternate prototype ("proto") and graphics ("gfx").
 
 - proto(name, hash, replay, scenes): one browser session on the packed prototype opened at `hash`

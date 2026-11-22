@@ -347,12 +347,12 @@ its story, never towards Microsoft Copilot's or Copilot Cowork's look.
 
 ## Brand frame scenes
 
-`class="scene frame td-cover|td-content|td-section|td-divider|td-ask|td-closing"`. The kit draws configured brand
+`class="scene frame bf-cover|bf-content|bf-section|bf-divider|bf-ask|bf-closing"`. The kit draws configured brand
 chrome; you place approved typography and palette shapes absolutely on top. Layouts, zones, the
 type scale, the palette, contrast, logos, photos and components: `brand-frame.md`.  Outlines: `assets/frames.html`.
 
 **Readable on a photo.**  Only the cover title, its subtitle, the ask's one line and the ask pill sit on a photo,
-over the brand foreground `.td-shade`.  Everything else goes on a white content scene.  The check measures the contrast
+over the brand foreground `.bf-shade`.  Everything else goes on a white content scene.  The check measures the contrast
 behind every line of text on a frame scene and flags anything under 4.5:1 (3:1 for text 24 px and up, or 18.66 px
 bold), and flags any colour, font, gradient or shadow that isn't the presenting brand's.
 

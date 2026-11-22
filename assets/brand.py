@@ -203,15 +203,8 @@ def brand_css(data):
         style = "italic" if "italic" in filename else "normal"
         css.append(f'@font-face{{font-family:"{family}";src:url("{path}");'
                    f'font-weight:{weight};font-style:{style};font-display:swap}}')
-    aliases = {
-        "orange": "accent", "teal": "accent", "green": "foreground",
-        "deep-orange": "foreground", "hi-orange": "accent", "charcoal": "foreground",
-        "grey": "muted", "off-white": "muted", "orange-tint": "background",
-        "teal-tint": "background",
-    }
-    tokens = "".join(f"--td-{alias}:{p[key]};" for alias, key in aliases.items())
-    tokens += "".join(f"--brand-{key}:{value};" for key, value in p.items())
-    css.append(f':root{{--td-font:"{family}",sans-serif;{tokens}}}')
-    css.append('.frame,.brand-frame{font-family:var(--td-font);'
+    tokens = "".join(f"--brand-{key}:{value};" for key, value in p.items())
+    css.append(f':root{{--brand-font:"{family}",sans-serif;{tokens}}}')
+    css.append('.frame,.brand-frame{font-family:var(--brand-font);'
                'background:var(--brand-background);color:var(--brand-foreground)}')
     return "\n".join(css) + "\n"

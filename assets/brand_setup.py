@@ -6,7 +6,7 @@ import shutil
 import tempfile
 from pathlib import Path
 
-from brand import (BrandError, SCHEMA_VERSION, asset_path, load_brand,
+from brand import (BrandError, asset_path, load_brand,
                    referenced_assets, validate_brand, write_json)
 
 
@@ -66,33 +66,6 @@ def setup(workspace, intake_path, approve=False, update=False):
     return load_brand(destination)
 
 
-def legacy_intake(output):
-    kit = Path(__file__).resolve().parent / "kit"
-    output = Path(output).resolve()
-    output.mkdir(parents=True, exist_ok=True)
-    for source, relative in [
-        (kit / "brand" / "wordmark-orange.svg", "logo.svg"),
-        (kit / "brand" / "wordmark-white.svg", "logo-light.svg"),
-        (kit / "fonts" / "Poppins-Regular.ttf", "Poppins-Regular.ttf"),
-    ]:
-        if not source.is_file():
-            raise BrandError(f"Legacy asset not found: {source}")
-        shutil.copy2(source, output / relative)
-    data = {
-        "schema_version": SCHEMA_VERSION, "name": "Tredence", "approved": False,
-        "asset_permissions": False, "text_only": False,
-        "palette": {"accent": "#fe5000", "background": "#ffffff",
-                    "foreground": "#404041", "muted": "#e6e7e8"},
-        "typography": {"family": "Poppins", "files": ["Poppins-Regular.ttf"], "system_font": False},
-        "logos": {"primary": "logo.svg", "light": "logo-light.svg"},
-        "tagline": "#BeyondPossible", "signoff": "#BeyondPossible",
-        "summary": "Explicit legacy Tredence identity import; review assets and messaging before approval.",
-        "images": [], "materials": [], "pronunciations": {"say": {}, "ipa": {}},
-    }
-    write_json(output / "intake.json", data)
-    return output / "intake.json"
-
-
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     commands = parser.add_subparsers(dest="command", required=True)
@@ -103,8 +76,6 @@ def main():
     start.add_argument("--update", action="store_true")
     check = commands.add_parser("validate")
     check.add_argument("--workspace", required=True)
-    legacy = commands.add_parser("import-tredence")
-    legacy.add_argument("--output", required=True, help="explicit directory for reviewable legacy intake")
     args = parser.parse_args()
     try:
         if args.command == "setup":
@@ -114,8 +85,6 @@ def main():
             path = Path(args.workspace).resolve() / ".prototype-film" / "brand.json"
             data = load_brand(path)
             print(f"Brand valid; reuse without onboarding: {data['name']}")
-        else:
-            print("Review permissions and set asset_permissions=true before setup:", legacy_intake(args.output))
     except (BrandError, OSError) as exc:
         parser.exit(1, f"Brand setup failed: {exc}\n")
 

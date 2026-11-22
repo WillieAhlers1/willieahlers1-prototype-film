@@ -36,7 +36,10 @@ def line_at(t):
 
 
 font = None
-for f in (os.path.join(cfg["captions"]["fontsdir"], "Poppins-Regular.ttf"), "DejaVuSans.ttf", "arial.ttf"):
+font_dir = cfg["captions"]["fontsdir"]
+font_files = sorted(glob.glob(os.path.join(font_dir, "*.ttf")) + glob.glob(os.path.join(font_dir, "*.otf")),
+                    key=lambda f: ("regular" not in os.path.basename(f).lower(), f))
+for f in (*font_files, "DejaVuSans.ttf", "arial.ttf"):
     try:
         font = ImageFont.truetype(f, 14); break
     except OSError:

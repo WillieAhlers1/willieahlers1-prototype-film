@@ -58,7 +58,7 @@ def main():
         sys.exit(f"no folder {D}")
     if (D / "SKILL.md").exists() or (D / "assets" / "kit").is_dir():
         sys.exit(f"{D} looks like the skill itself, not a prototype folder; refusing")
-    if D.name in {".prototype-film", ".tredence"} or (D / ".prototype-film").exists():
+    if D.name == ".prototype-film" or (D / ".prototype-film").exists():
         sys.exit(f"refusing to clean persistent brand state or its workspace: {D}")
 
     packed = sorted((D / "dist").glob("*.html")) if (D / "dist").is_dir() else []
@@ -91,7 +91,7 @@ def main():
     build = Path(a.build).resolve() if a.build else None
     if build and build.exists():
         if (build / "SKILL.md").exists() or (build / ".prototype-film").exists() or (
-                build.name in {".prototype-film", ".tredence"}):
+                build.name == ".prototype-film"):
             sys.exit(f"refusing to delete skill/workspace/persistent state: {build}")
         for parent in (D, *D.parents):
             if (parent / ".prototype-film").exists() and (

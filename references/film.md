@@ -21,7 +21,8 @@ Check the selected voice engine separately; Kokoro needs kokoro-onnx, soundfile 
   libass if there's none on PATH). Keep new `<home>` state in `<workspace>/.prototype-film` so the Kokoro model
   and the voice profile survive between sessions; `new_film.py` finds it there.  If the model download is blocked,
   ask the user to download the two files listed in `voice.md` in their browser and drop them into
-  `<home>/kokoro/`. Preserve existing legacy homes (see `voice.md`). macOS `say` can't be reached from the sandbox.
+  `<home>/kokoro/`. Existing model directories can be configured explicitly (see `voice.md`).
+  macOS `say` can't be reached from the sandbox.
 - **Copilot Cowork (Windows, secondary).**  Don't `pip install`.  Use what the sandbox has (Node Playwright under
   docgen-utils: `record.js`, `stills.js`, `outline.js`; ffmpeg).  Kokoro usually isn't available there: voice with
   Azure AI Speech (`--engine azure`, `SPEECH_KEY`/`SPEECH_REGION`, a non-multilingual voice such as
@@ -45,10 +46,9 @@ stills before filming, contact sheets before delivering.  Every command runs in 
    `%TEMP%\film-<name>` on Windows): filming writes thousands of frames.  It holds the scripts, the shared lexicon,
    `graphics.html`, the configured font, the logos, the prototype in `proto/`, and `film.json`, `narration.txt`,
    `lexicon.json` and `plan.py` (only for the press-schedule fallback) from the templates.  Re-running refreshes
-   scripts and keeps your files. Brand assets come from the same approved snapshot, not the legacy kit;
+   scripts and keeps your files. Brand assets come from the same approved workspace snapshot;
    a changed identity requires explicit `--update-brand` after review (`--force` also resets film inputs).
    `--brand <manifest>` is an alternative to `--workspace`; a standalone packed prototype carries its snapshot.
-   Legacy `--example` requires an explicitly selected Tredence identity, not another brand.
    In a Linux sandbox `/tmp` can be wiped between
    turns: re-run it if so.
 2. **Narration** (`narration.txt`, → `narration.md`).  Start from `film-draft.txt`; keep its `@` directions, write
@@ -69,8 +69,8 @@ stills before filming, contact sheets before delivering.  Every command runs in 
    story needs additional imagery not in the bundle. None: configured flat colour, reported explicitly.
 6. **Graphics** (`film.json` `graphics`).  Kicker, title (`*key phrase*` turns brand accent), simulation labels,
    stat chips (numbers as format fields against the engine totals), morning clock, name card, work-list card, end
-   card.  Simulation data: `simdata.json` straight from the engine (`film/examples/woodgrove-sample/make_simdata.py`
-   shows the shape).  `python gfx_data.py`, then (after step 7) `python stills.py`: look at every still.
+   card. Simulation data: `simdata.json` straight from the illustrative engine, with its basis in the brief.
+   `python gfx_data.py`, then (after step 7) `python stills.py`: look at every still.
 7. **Timing** (→ §Timing below).  `python autoplan.py`: reads the outline, the cue lengths and the `@` directions;
    writes `plan.json` and prints the timeline and every step time. Report spoken rate near 166 words/minute
    separately from complete film pace at most 160, including reading/settling. Revise content or get duration

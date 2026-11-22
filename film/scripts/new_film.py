@@ -16,35 +16,21 @@ sys.path.insert(0, str(SKILL / "assets"))
 
 
 def find_home(proto=None, workspace=None):
-    """Prefer the new workspace home, retaining existing legacy profiles and models."""
+    """Use the explicit generic home or the workspace's persistent runtime state."""
     if os.environ.get("PROTOTYPE_FILM_HOME"):
         return os.environ["PROTOTYPE_FILM_HOME"]
-    if os.environ.get("TREDENCE_HOME"):
-        print("Using legacy TREDENCE_HOME for voice profile and models.")
-        return os.environ["TREDENCE_HOME"]
     root = Path(workspace).resolve() if workspace else None
     if root is None and proto:
         for d in Path(proto).resolve().parents:
-            if (d / ".prototype-film").is_dir() or (d / ".tredence").is_dir():
+            if (d / ".prototype-film").is_dir():
                 root = d
                 break
             if d.name == "working":
                 root = d.parent
                 break
     if root:
-        generic, legacy = root / ".prototype-film", root / ".tredence"
-        generic_runtime = any((generic / x).exists() for x in ("voice.json", "kokoro", "lexicon.json"))
-        legacy_runtime = any((legacy / x).exists() for x in ("voice.json", "kokoro", "lexicon.json"))
-        if legacy_runtime and not generic_runtime:
-            print("Using legacy workspace .tredence for voice profile and models.")
-            return str(legacy)
-        return str(generic)
-    legacy = Path.home() / ".tredence"
-    generic = Path.home() / ".prototype-film"
-    if not generic.exists() and legacy.is_dir():
-        print("Using legacy ~/.tredence for voice profile and models.")
-        return str(legacy)
-    return str(generic)
+        return str(root / ".prototype-film")
+    return str(Path.home() / ".prototype-film")
 
 
 def fingerprint(path, data, embedded=False):
@@ -150,7 +136,6 @@ def main():
     ap.add_argument("--workspace")
     ap.add_argument("--brand", help="approved brand manifest or workspace")
     ap.add_argument("--name")
-    ap.add_argument("--example")
     ap.add_argument("--force", action="store_true", help="overwrite film inputs and permit brand update")
     ap.add_argument("--update-brand", action="store_true", help="explicitly replace the saved brand snapshot")
     a = ap.parse_args()
@@ -160,9 +145,6 @@ def main():
     p = Path(a.prototype).resolve() if a.prototype else None
     if p and not p.is_file():
         ap.error(f"prototype not found: {p}")
-    ex = FILM / "examples" / a.example if a.example else None
-    if ex and not ex.is_dir():
-        ap.error(f"example not found: {ex}")
     explicit = discover(find_manifest, a.brand or a.workspace)
     if (a.brand or a.workspace) and not explicit:
         ap.error("approved brand manifest not found")
@@ -187,10 +169,6 @@ def main():
         if snapshot_source:
             selected = snapshot_source
             selected_data = load_brand(selected)
-        if ex and selected_data["name"].strip().casefold() != "tredence":
-            ap.error("legacy examples require an explicitly selected Tredence brand")
-        if ex and not explicit:
-            ap.error("legacy examples require --brand or --workspace with a Tredence brand")
         snapshot = B / "brand" / "brand.json"
         if snapshot.exists() and fingerprint(snapshot, load_brand(snapshot)) != source_fingerprint:
             if not (a.force or a.update_brand):
@@ -205,8 +183,6 @@ def main():
     shutil.copy2(SKILL / "assets" / "brand.py", B / "brand.py")
     (B / "lexicon").mkdir(exist_ok=True)
     shutil.copy2(FILM / "lexicon" / "generic.json", B / "lexicon" / "generic.json")
-    if ex:
-        shutil.copy2(FILM / "lexicon" / "tredence.json", B / "lexicon" / "tredence.json")
     shutil.copy2(FILM / "templates" / "graphics.html", B / "graphics.html")
     if not snapshot.exists() or a.force or a.update_brand:
         if (B / "brand").exists() and selected != snapshot:
@@ -235,17 +211,10 @@ def main():
            "plan.py": FILM / "templates" / "plan_template.py",
            "narration.txt": FILM / "templates" / "narration-script-template.txt",
            "lexicon.json": FILM / "templates" / "lexicon.json"}
-    if ex:
-        for f in ex.iterdir():
-            if f.is_file() and f.name not in src and f.suffix != ".md":
-                shutil.copy2(f, B / f.name)
-        if (ex / "images").is_dir():
-            shutil.copytree(ex / "images", B / "images", dirs_exist_ok=True)
-        src.update({k: ex / k for k in src if (ex / k).exists()})
     for name, source in src.items():
         if a.force or not (B / name).exists():
             shutil.copy2(source, B / name)
-            if name == "narration.txt" and not ex:
+            if name == "narration.txt":
                 narration = (B / name).read_text(encoding="utf-8").replace("<Brand>", selected_data["name"])
                 (B / name).write_text(narration, encoding="utf-8")
             print("new", name)

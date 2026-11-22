@@ -32,7 +32,7 @@ class PrototypeTests(unittest.TestCase):
         cls.work = Path(cls.temp.name) / "smoke"
         cls.work.mkdir()
         shutil.copytree(ROOT / "assets" / "kit", cls.work / "kit",
-                        ignore=shutil.ignore_patterns("brand", "fonts", "photos"))
+                        ignore=shutil.ignore_patterns("__pycache__"))
         brand_dir = Path(cls.temp.name) / "manifest"
         brand_dir.mkdir()
         (brand_dir / "logo.svg").write_text('<svg xmlns="http://www.w3.org/2000/svg" width="100" height="30"><rect width="100" height="30" fill="#005a9c"/></svg>', encoding="utf-8")
@@ -134,11 +134,11 @@ class PrototypeTests(unittest.TestCase):
     def test_brand_frame_and_microsoft_product_separation(self):
         self.open()
         self.assertIn("Arial", self.page.locator("#cover").evaluate("(e) => getComputedStyle(e).fontFamily"))
-        self.assertEqual(self.page.locator("#close .td-hl").evaluate("(e) => getComputedStyle(e).color"), "rgb(0, 90, 156)")
-        self.assertEqual(self.page.locator("#cover .td-ch-tag").inner_text(), "Ideas into action")
-        self.assertEqual(self.page.locator("#closing .td-ch-close").inner_text(), "Thank you")
+        self.assertEqual(self.page.locator("#close .bf-hl").evaluate("(e) => getComputedStyle(e).color"), "rgb(0, 90, 156)")
+        self.assertEqual(self.page.locator("#cover .bf-ch-tag").inner_text(), "Ideas into action")
+        self.assertEqual(self.page.locator("#closing .bf-ch-close").inner_text(), "Thank you")
         self.assertNotIn("Arial", self.page.locator("#chat .cpa").evaluate("(e) => getComputedStyle(e).fontFamily"))
-        self.assertIn("brand/logo.svg", self.page.locator("#cover .td-ch-logo").get_attribute("src"))
+        self.assertIn("brand/logo.svg", self.page.locator("#cover .bf-ch-logo").get_attribute("src"))
         for scene in ("cover", "close", "closing"):
             self.page.evaluate("(id) => proto.go(id, true)", scene)
             findings = self.page.evaluate(CHECK["AUDIT"])["findings"]
@@ -225,7 +225,7 @@ class PrototypeTests(unittest.TestCase):
     def test_checker_preserves_brand_rules_and_adds_product_rules(self):
         self.open("?check")
         self.page.evaluate("() => proto.go('close', true)")
-        self.page.locator("#close .td-title").evaluate("(e) => { e.style.fontFamily = 'Georgia'; e.style.color = '#123456'; }")
+        self.page.locator("#close .bf-title").evaluate("(e) => { e.style.fontFamily = 'Georgia'; e.style.color = '#123456'; }")
         findings = self.page.evaluate(CHECK["AUDIT"])["findings"]
         self.assertTrue(any("not in brand font" in f for f in findings), findings)
         self.assertTrue(any("outside the brand palette" in f for f in findings), findings)

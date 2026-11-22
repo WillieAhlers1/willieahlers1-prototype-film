@@ -1,4 +1,4 @@
-"""Brand snapshots render and pack independently without legacy defaults."""
+"""Brand snapshots render and pack independently without bundled identity defaults."""
 import json
 from pathlib import Path
 import re
@@ -49,7 +49,7 @@ class BrandPrototypeTests(unittest.TestCase):
         out = self.root / name
         out.mkdir()
         shutil.copytree(ROOT / "assets" / "kit", out / "kit",
-                        ignore=shutil.ignore_patterns("brand", "fonts", "photos"))
+                        ignore=shutil.ignore_patterns("__pycache__"))
         install_brand(manifest_file, out)
         starter = (ROOT / "assets" / "starter.html").read_text(encoding="utf-8")
         starter = re.sub(r"\[\[([^\]\n]+)\]\]", "Sample", starter)
@@ -73,8 +73,7 @@ class BrandPrototypeTests(unittest.TestCase):
                 packed = out.read_text(encoding="utf-8")
                 self.assertNotIn("kit/brand/", packed)
                 self.assertNotIn("Poppins", packed)
-                self.assertNotIn("BeyondPossible", packed)
-                self.assertNotIn("Tredence", packed)
+                self.assertNotIn("Moss tagline" if name == "Northstar" else "Northstar tagline", packed)
                 payload = re.search(r"window\.PROTOTYPE_BRAND\s*=\s*(\{.*?\});", packed).group(1)
                 embedded = json.loads(payload)
                 self.assertEqual(embedded["name"], name)
@@ -87,12 +86,12 @@ class BrandPrototypeTests(unittest.TestCase):
                     page.on("pageerror", lambda e, errors=errors: errors.append(str(e)))
                     page.goto(target.as_uri() + "?driven&instant")
                     page.wait_for_function("window.proto && proto.ready")
-                    self.assertEqual(page.locator("#cover .td-ch-tag").inner_text(), manifest["tagline"])
-                    self.assertEqual(page.locator("#closing .td-ch-close").inner_text(), manifest["signoff"])
+                    self.assertEqual(page.locator("#cover .bf-ch-tag").inner_text(), manifest["tagline"])
+                    self.assertEqual(page.locator("#closing .bf-ch-close").inner_text(), manifest["signoff"])
                     self.assertIn(font, page.locator("#cover").evaluate("e => getComputedStyle(e).fontFamily"))
-                    self.assertEqual(page.locator("#close .td-hl").evaluate("e => getComputedStyle(e).color"), rgb)
-                    self.assertEqual(page.locator("#cover .td-ch-name").count(), int(text_only))
-                    self.assertEqual(page.locator("#cover .td-ch-logo").count(), int(not text_only))
+                    self.assertEqual(page.locator("#close .bf-hl").evaluate("e => getComputedStyle(e).color"), rgb)
+                    self.assertEqual(page.locator("#cover .bf-ch-name").count(), int(text_only))
+                    self.assertEqual(page.locator("#cover .bf-ch-logo").count(), int(not text_only))
                     self.assertFalse(errors)
                     self.assertFalse(requests)
                     if target == out:
@@ -133,7 +132,7 @@ class BrandPrototypeTests(unittest.TestCase):
 
     def test_font_asset_is_embedded(self):
         manifest_file, html, manifest = self.create_brand("Fonted", "#005a9c", "Fixture Font", False)
-        shutil.copy2(ROOT / "assets" / "kit" / "fonts" / "Poppins-Regular.ttf", manifest_file.parent / "font.ttf")
+        shutil.copy2(ROOT / "tests" / "fixtures" / "fonts" / "Poppins-Regular.ttf", manifest_file.parent / "font.ttf")
         (manifest_file.parent / "guide.txt").write_text("Approved guide", encoding="utf-8")
         manifest["typography"].update({"files": ["font.ttf"], "system_font": False})
         manifest["images"] = ["mark.svg"]

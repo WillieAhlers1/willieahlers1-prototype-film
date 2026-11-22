@@ -25,7 +25,7 @@ the concept label missing, placeholder or AI-tell wording, emoji, and notes for 
 In the agent app (.cpa): an agent reply without its message header (.cp-who) at the start of the chat or after the person's message,
 and the Microsoft Copilot logo or name used as the custom app's own identity.
 Brand frame scenes (.scene.frame): colors and font outside the approved brand, a gradient
-(other than .td-shade), a shadow, and text smaller than 18 px. Use --brand manifest.json
+(other than .bf-shade), a shadow, and text smaller than 18 px. Use --brand manifest.json
 to check against a specific approved manifest instead of the embedded configuration.
 On a full pass, any double-bracket placeholder left from the starter or shells.html, anywhere in the source.
 Power BI visuals: no title or number format, categories and values that don't line up, a "0%" format given fractions, a chart that drew nothing or
@@ -94,7 +94,7 @@ AUDIT = r"""() => {
     if (r.width && (r.right > st.right + 2 || r.bottom > st.bottom + 2 || r.left < st.left - 2)) out.clipped.push(name + ' (off stage)');
   });
   out.text = scene.innerText;
-  scene.querySelectorAll('.td-ch').forEach(c => { out.text = out.text.replace(c.innerText, ''); });
+  scene.querySelectorAll('.bf-ch').forEach(c => { out.text = out.text.replace(c.innerText, ''); });
   out.clickable = scene.querySelectorAll('[data-go]').length;
   out.frame = scene.classList.contains('frame');
   out.findings = [];
@@ -117,16 +117,16 @@ AUDIT = r"""() => {
     const nm = el => (el.textContent || el.className || el.tagName).toString().trim().replace(/\s+/g, ' ').slice(0, 50);
     const seen = new Set(), flag = msg => { if (!seen.has(msg)) { seen.add(msg); out.findings.push(msg); } };
     scene.querySelectorAll('*').forEach(el => {
-      if (el.closest('.notes') || el.closest('.td-ch') || !vis(el) || el.closest('svg') && el.tagName.toLowerCase() !== 'svg') return;
+      if (el.closest('.notes') || el.closest('.bf-ch') || !vis(el) || el.closest('svg') && el.tagName.toLowerCase() !== 'svg') return;
       const cs = getComputedStyle(el), own = Array.from(el.childNodes).some(n => n.nodeType === 3 && n.nodeValue.trim());
-      const bg = hex(cs.backgroundColor), shade = el.classList.contains('td-shade');
+      const bg = hex(cs.backgroundColor), shade = el.classList.contains('bf-shade');
       if (bg && !PAL.has(bg))
         flag('frame colour outside the brand palette: background #' + bg + ' on ' + nm(el));
       ['Top', 'Right', 'Bottom', 'Left'].forEach(sd => {
         const b = hex(cs['border' + sd + 'Color']);
         if (parseFloat(cs['border' + sd + 'Width']) > 0 && b && !PAL.has(b)) flag('frame colour outside the brand palette: border #' + b + ' on ' + nm(el));
       });
-      if (/gradient/.test(cs.backgroundImage) && !shade) flag('gradient on a frame scene (flat colour only; .td-shade is the one exception): ' + nm(el));
+      if (/gradient/.test(cs.backgroundImage) && !shade) flag('gradient on a frame scene (flat colour only; .bf-shade is the one exception): ' + nm(el));
       if (cs.boxShadow && cs.boxShadow !== 'none') flag('shadow on a frame scene (flat colour only): ' + nm(el));
       if (!own && el.tagName.toLowerCase() !== 'svg') return;
       const fg = hex(cs.color), size = parseFloat(cs.fontSize);
@@ -224,7 +224,7 @@ FRAME_TEXT = r"""() => {
     return .2126 * v[0] + .7152 * v[1] + .0722 * v[2]; };
   const walk = document.createTreeWalker(scene, NodeFilter.SHOW_TEXT);
   for (let n; (n = walk.nextNode());) {
-    const el = n.parentElement; if (!n.nodeValue.trim() || el.closest('.notes') || el.closest('.concept') || el.closest('.td-ch') || el.closest('.td-cover-tag')) continue;
+    const el = n.parentElement; if (!n.nodeValue.trim() || el.closest('.notes') || el.closest('.concept') || el.closest('.bf-ch') || el.closest('.bf-cover-tag')) continue;
     const cs = getComputedStyle(el); if (cs.visibility === 'hidden' || !el.getClientRects().length || solid(el)) continue;
     if (cs.backgroundClip === 'text') continue;
     const rg = document.createRange(); rg.selectNodeContents(n);
@@ -513,7 +513,7 @@ def main():
                     if lines is not None:
                         bare = base64.b64encode(page.screenshot()).decode()
                         for t in dict.fromkeys(page.evaluate(CONTRAST, [bare, lines])):
-                            issues.append(f"{tag}: hard to read against what's behind it (raise the .td-shade on a photo, or use a darker palette colour): {t!r}")
+                            issues.append(f"{tag}: hard to read against what's behind it (raise the .bf-shade on a photo, or use a darker palette colour): {t!r}")
                     if st["beat"] == st["max"]:
                         for pat in TELLS:
                             for m in set(re.findall(pat, a["text"], re.I)):

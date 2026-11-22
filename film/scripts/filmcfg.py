@@ -9,6 +9,7 @@ import os
 import shutil
 import subprocess
 import tempfile
+from pathlib import Path
 
 DEFAULTS = {
     "tmp": "",                          # frames, segment encodes, mix and the final MP4; "" = <system temp>/film-work
@@ -81,7 +82,7 @@ DEFAULTS = {
         "settle_s": 0.6,                # a stop with no line stays at least its streaming time plus this
         "min_stop_s": 1.4,              # no step sooner than this after the previous one (crossfades swallow presses)
         "tail_s": 0.9,                  # a scene ends this long after its last line
-        "end_hold_s": 3.5,              # the last scene (#beyondpossible) holds this long with music only
+        "end_hold_s": 3.5,              # the last sign-off scene holds this long with music only
     },
     "ffmpeg": "",                       # empty = $FFMPEG, PATH, then the imageio-ffmpeg binary
 }
@@ -134,24 +135,11 @@ def runtime_home(cfg):
         return cfg["home"]
     if os.environ.get("PROTOTYPE_FILM_HOME"):
         return os.environ["PROTOTYPE_FILM_HOME"]
-    if os.environ.get("TREDENCE_HOME"):
-        print("Using legacy TREDENCE_HOME for voice profile and models.")
-        return os.environ["TREDENCE_HOME"]
-    for root in (os.getcwd(), *[str(p) for p in __import__("pathlib").Path.cwd().parents]):
-        generic, legacy = os.path.join(root, ".prototype-film"), os.path.join(root, ".tredence")
-        generic_runtime = any(os.path.exists(os.path.join(generic, x)) for x in ("voice.json", "kokoro", "lexicon.json"))
-        legacy_runtime = any(os.path.exists(os.path.join(legacy, x)) for x in ("voice.json", "kokoro", "lexicon.json"))
-        if legacy_runtime and not generic_runtime:
-            print("Using legacy workspace .tredence for voice profile and models.")
-            return legacy
+    for root in (os.getcwd(), *[str(p) for p in Path.cwd().parents]):
+        generic = os.path.join(root, ".prototype-film")
         if os.path.isdir(generic):
             return generic
-    generic = os.path.expanduser("~/.prototype-film")
-    legacy = os.path.expanduser("~/.tredence")
-    if not os.path.exists(generic) and os.path.isdir(legacy):
-        print("Using legacy ~/.tredence for voice profile and models.")
-        return legacy
-    return generic
+    return os.path.expanduser("~/.prototype-film")
 
 
 def tmp(cfg, name):

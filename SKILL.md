@@ -38,7 +38,7 @@ python <skill>/assets/brand_setup.py validate --workspace <workspace>
 
 If valid, read `.prototype-film/brand.json` and its approved summary/materials; do not ask for branding again.
 If absent, run onboarding below. If invalid, explain the exact problem and request only the repair needed.
-Never fall back to Tredence or another brand. A new workspace requires its own setup.
+Never fall back to a bundled or unapproved brand. A new workspace requires its own setup.
 Read [brand setup](./references/brand-setup.md) for the manifest and supported file types.
 
 1. In one consolidated form, ask for guidelines, logo variants, palette, fonts, photos/illustrations/icons,
@@ -143,8 +143,8 @@ The presenting brand frames the story; product shells represent where work happe
   The selected presenting brand does not recolor Teams, Outlook, Dynamics 365 or Power BI.
 - The customer's custom app can use approved identity scoped to that app, without changing surrounding products.
   Its name, agent identity, work trace and input/approval cards are specific to the story.
-- Brand frames use the saved palette, typography and logos, not fixed Tredence styling. Existing `td-*` layout
-  names are compatibility aliases, not a brand selection. Covers/closes are optional and business-led.
+- Brand frames use the saved palette, typography and logos. Generic `bf-*` classes define frame layouts,
+  not a brand selection. Covers/closes are optional and business-led.
 - Use local approved imagery only; no silent borrowed brand photos. No gradients, decoration or product chrome
   on frames unless approved identity guidance explicitly calls for it and validation supports it.
 - Keep text readable, contrast adequate, keyboard navigation working and reduced-motion final states intact.
@@ -190,14 +190,14 @@ python <skill>/assets/cleanup.py working/<name> --build <temporary-film-build>
 ```
 
 Show the exact list and run with `--yes` only after approval. Keep the packed HTML/latest MP4, and zip source
-including brand snapshot, brief, narration, lexicon and film config. Never delete `.prototype-film/` or legacy
+including brand snapshot, brief, narration, lexicon and film config. Never delete `.prototype-film/`, configured
 runtime state, the workspace, skill, or any unrelated folder. Restore sources for edits; reuse the saved brand.
 
 ## Skill contents
 
 `assets/` contains setup/init, starter/frame/product outlines, kit, check/pack/readiness and cleanup.
-`film/` contains scripts, templates, generic lexicon and explicitly legacy examples.
+`film/` contains scripts, templates and a generic lexicon.
 `references/` contains progressively loaded guides. `tests/` contains contract, browser and film regressions.
-Legacy Tredence assets are available only through an explicit reviewed import, never generic defaults.
+No brand logos or photo sets are bundled; supply approved workspace assets during setup.
 Install under a matching `prototype-film` folder or as a ZIP with this file at its root.
 Source: [WillieAhlers1/willieahlers1-prototype-film](https://github.com/WillieAhlers1/willieahlers1-prototype-film).

@@ -12,7 +12,7 @@ not both.
 - Use configured typography, approved logo variants and palette, with actual readable contrast.
 - Keep titles conversational and brief; marked key phrases use the configured accent.
 - Concept/fictitious-data labels stay visible. Key content stays above the caption zone (roughly bottom 190px).
-- No borrowed Tredence wordmark, hashtag, palette or photography in generic output.
+- No bundled wordmark, hashtag, palette or photography; use only the approved workspace identity.
 - If no imagery was approved during onboarding, use the approved flat background and report it.
   Ask for additional scene-specific images only when the requested story needs assets not already supplied.
 - Never generate images unless explicitly requested. Respect permissions and use fictional people.

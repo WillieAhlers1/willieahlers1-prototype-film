@@ -1,5 +1,6 @@
 import copy
 import json
+import re
 import sys
 import tempfile
 import unittest
@@ -7,7 +8,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "assets"))
-from brand import BrandError, brand_fingerprint, find_manifest, install_brand, load_brand, validate_brand, write_json
+from brand import BrandError, brand_css, brand_fingerprint, find_manifest, install_brand, load_brand, validate_brand, write_json
 from brand_setup import setup
 
 
@@ -33,6 +34,20 @@ def fixture(directory, name="Northstar", accent="#663399"):
 
 
 class BrandBundleTests(unittest.TestCase):
+    def test_shared_kit_has_no_bundled_identity_or_font_defaults(self):
+        kit = ROOT / "assets" / "kit"
+        self.assertEqual({p.name for p in kit.iterdir() if not p.name.startswith("__")},
+                         {"proto.js", "proto-style.js", "icons.js"})
+        for name, accent in (("Northstar", "#663399"), ("Harbor", "#127c84")):
+            with tempfile.TemporaryDirectory() as directory:
+                data = fixture(directory, name, accent)
+                css = brand_css(data)
+                self.assertEqual(set(re.findall(r"(--[\w-]+):", css)),
+                                 {"--brand-font", "--brand-accent", "--brand-background",
+                                  "--brand-foreground", "--brand-muted"})
+                self.assertIn(f"--brand-accent:{accent};", css)
+                self.assertIn('--brand-font:"Arial",sans-serif;', css)
+
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)

@@ -209,7 +209,7 @@ for (const [i, s] of scenes.entries()) {
       if (lines !== null) {
         const bare = (await page.screenshot()).toString("base64");
         for (const t of uniq(await page.evaluate(CONTRAST, [bare, lines])))
-          issues.push(`${tag}: hard to read against what's behind it (raise the .td-shade on a photo, or use a darker palette colour): '${t}'`);
+          issues.push(`${tag}: hard to read against what's behind it (raise the .bf-shade on a photo, or use a darker palette colour): '${t}'`);
       }
       if (st.beat === st.max) {
         for (const re of TELLS) for (const m of uniq(a.text.match(re) || [])) issues.push(`${tag}: wording to replace: '${m}'`);

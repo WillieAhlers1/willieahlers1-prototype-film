@@ -25,8 +25,7 @@ Engines:
 Pronunciation: every line goes through speech.py first (numbers and abbreviations written for the ear, then the
 lexicon: shared, yours in <home>, and this film's lexicon.json).  Words no list covers are printed as "check".
 
-<home> is film.json "home", else $PROTOTYPE_FILM_HOME or a workspace .prototype-film. Existing TREDENCE_HOME,
-.tredence profiles and models are retained when no generic runtime profile exists. Consent, never credentials,
+<home> is film.json "home", else $PROTOTYPE_FILM_HOME or a workspace .prototype-film. Consent, never credentials,
 may be saved in voice.json. Azure requires explicit consent and credentials; it does not fall back silently.
 
 Each line is cached in voice/ by engine, voice, speed and spoken text, so after editing one line only that line is
@@ -158,7 +157,7 @@ def azure(text, P, dest, ipa=None):
             f"<voice name={quoteattr(voice)}><prosody rate={quoteattr(rate)}>{''.join(parts)}</prosody></voice></speak>")
     req = urllib.request.Request(url, data=ssml.encode("utf-8"), method="POST", headers={
         "Ocp-Apim-Subscription-Key": key, "Content-Type": "application/ssml+xml",
-        "X-Microsoft-OutputFormat": "riff-48khz-16bit-mono-pcm", "User-Agent": "prototype-film-tredence"})
+        "X-Microsoft-OutputFormat": "riff-48khz-16bit-mono-pcm", "User-Agent": "prototype-film"})
     with urllib.request.urlopen(req, timeout=60) as r, open(dest, "wb") as out:
         out.write(r.read())
 

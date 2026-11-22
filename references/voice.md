@@ -67,13 +67,13 @@ If available, `voice.py --listen` transcribes generated lines with offline Whisp
 review the flags rather than treating all transcription differences as pronunciation errors.
 Never claim a listening check ran when models/tools were unavailable.
 
-## Runtime migration
+## Runtime state
 
 New workspace identity lives in `.prototype-film/brand.json`; runtime models/profile/lexicon are separate.
-Prefer the configured generic home or workspace `.prototype-film` for new users.
-Existing explicit film home, `TREDENCE_HOME`, `.tredence` workspace/home state remain compatibility inputs.
-Preserve them rather than deleting or redownloading models. Report which runtime location was selected.
-Migrating identity does not require changing an existing voice profile; validate reuse first.
+Use explicit `film.json.home`, `PROTOTYPE_FILM_HOME`, a workspace `.prototype-film`, or `~/.prototype-film`.
+To reuse a model/profile from another directory, set its path explicitly in `film.json.home`; no brand-specific
+runtime discovery is supported. Preserve model files rather than deleting/redownloading them.
+Report which runtime location was selected; changing identity does not require changing the voice profile.
 Never copy credentials into the new runtime state.
 
 ## Pacing and delivery report

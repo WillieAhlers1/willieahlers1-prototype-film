@@ -34,7 +34,7 @@ class SpeechTests(unittest.TestCase):
 
     def test_lexicon_and_suspects(self):
         say, ipa = speech.load_lexicon(home=tempfile.mkdtemp(), build=tempfile.mkdtemp())
-        self.assertNotIn("Tredence", ipa)
+        self.assertNotIn("UnconfiguredBrand", ipa)
         sp = speech.spoken("Orders in the ERP.", say, ipa)
         self.assertEqual(sp, "Orders in the E R P.")
         self.assertEqual(speech.suspects("The OEE on line X7 in SmartPlan, per the CEO.", say, ipa), ["OEE", "SmartPlan", "X7"])

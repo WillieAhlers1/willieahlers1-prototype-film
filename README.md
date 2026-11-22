@@ -63,5 +63,15 @@ For existing clones, update the remote explicitly rather than relying on redirec
 git remote set-url origin https://github.com/WillieAhlers1/willieahlers1-prototype-film.git
 ```
 
-Voice: Kokoro-82M (Apache-2.0) via kokoro-onnx; optional Azure service. Legacy Poppins fonts: SIL OFL.
+Voice: Kokoro-82M (Apache-2.0) via kokoro-onnx; optional Azure service.
+The Poppins font in `tests/fixtures/fonts/` is a licensed SIL OFL test resource, not a default brand font.
 User-supplied assets/fonts must have approved use and embedding permissions.
+
+Brand assets are supplied through workspace setup; no logos or photo sets are bundled. Runtime discovery uses
+`film.json.home`, `PROTOTYPE_FILM_HOME`, workspace `.prototype-film/`, or `~/.prototype-film/`.
+For an existing model/profile directory, set its path explicitly in `film.json.home`; no brand-specific import
+or runtime aliases are supported.
+
+Frame markup uses generic `bf-*` classes and `--brand-*` tokens. Previously generated packed HTML remains
+self-contained; when refreshing older editable sources, update their frame hooks and regenerate the brand
+stylesheet before checking and packing.

@@ -110,7 +110,7 @@ button{font:inherit;color:inherit;border:0;background:none;padding:0;cursor:poin
   background:rgba(36,36,36,.78);color:#fff;font-size:12px;line-height:16px;font-weight:600;letter-spacing:.2px;pointer-events:none}
 .concept svg{width:14px;height:14px;fill:#fff}
 /* On brand frame scenes the label sits in the footer. */
-.scene-frame-on .concept{left:500px;bottom:13px;background:rgba(64,64,65,.92);font-family:var(--td-font);font-weight:500}
+.scene-frame-on .concept{left:500px;bottom:13px;background:rgba(64,64,65,.92);font-family:var(--brand-font);font-weight:500}
 /* "Next" pill: added by proto.js when the demo waits for the presenter and nothing is cued.  Big enough to find at a
    glance from across a room; the arrow nudges gently so the eye goes to it. */
 .proto-next{position:absolute;right:154px;bottom:20px;z-index:900;display:flex;align-items:center;gap:14px;max-width:680px;padding:10px 10px 10px 26px;border:0;border-radius:999px;
@@ -1007,71 +1007,70 @@ table.grid.compact td{height:36px;padding:0 8px;font-size:13px}
 .oi .ic{width:14px;height:14px}
 .chip .oi,.ref .oi{width:18px;height:18px}
 
-/* Branded frame. The td-* names are retained as compatibility aliases. */
-.frame{background:var(--brand-background);color:var(--brand-foreground);font-family:var(--td-font);font-weight:400}
+/* Brand-configured frame layouts. */
+.frame{background:var(--brand-background);color:var(--brand-foreground);font-family:var(--brand-font);font-weight:400}
 .frame::before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background-repeat:no-repeat}
 .frame > *{z-index:2}
-.frame > .td-photo,.frame > .td-shade{z-index:0}
-.frame.td-content::before,.frame.td-section::before{border-top:9px solid var(--td-orange)}
-.frame.td-cover::before{top:775px;background:var(--td-orange)}
-.frame.td-divider{background:var(--td-orange);color:var(--brand-background)}
-.frame.td-ask{background:var(--brand-foreground);color:var(--brand-background)}
-.frame.td-closing{background:var(--td-orange);color:var(--brand-background)}
-.td-ch-logo{position:absolute;left:64px;top:82px;width:264px;height:60px;object-fit:contain;object-position:left center;z-index:2}
-.td-ch-name{left:64px;top:82px;font-size:32px;font-weight:700;color:var(--brand-background)}
+.frame > .bf-photo,.frame > .bf-shade{z-index:0}
+.frame.bf-content::before,.frame.bf-section::before{border-top:9px solid var(--brand-accent)}
+.frame.bf-cover::before{top:775px;background:var(--brand-accent)}
+.frame.bf-divider{background:var(--brand-accent);color:var(--brand-background)}
+.frame.bf-ask{background:var(--brand-foreground);color:var(--brand-background)}
+.frame.bf-closing{background:var(--brand-accent);color:var(--brand-background)}
+.bf-ch-logo{position:absolute;left:64px;top:82px;width:264px;height:60px;object-fit:contain;object-position:left center;z-index:2}
+.bf-ch-name{left:64px;top:82px;font-size:32px;font-weight:700;color:var(--brand-background)}
 /* Chrome text, added to frame scenes by the script at the end of this file (aria-hidden, not part of the story) */
-.td-ch{position:absolute;z-index:1;margin:0;white-space:nowrap;pointer-events:none;line-height:1.2;font-family:var(--td-font)}
-.td-ch-copy{left:50px;top:1042px;font-size:18px;color:var(--td-grey)}
-.td-ch-num{left:930px;top:1040px;width:60px;text-align:center;font-size:20px;color:var(--td-grey)}
-.td-ch-tag{left:1200px;top:810px;width:650px;text-align:right;font-size:32px;font-weight:700;color:var(--brand-background)}
-.td-ch-hash{left:50px;top:50px;font-size:32px;font-weight:700;color:var(--brand-foreground)}
-.td-ch-close{left:112.5px;top:474.5px;width:1695.5px;text-align:center;font-size:108px;font-weight:700;line-height:1.4;color:var(--brand-background)}
-/* Photos: cover = above the band; ask = full bleed.  .td-shade is the Charcoal fade that keeps white text readable
+.bf-ch{position:absolute;z-index:1;margin:0;white-space:nowrap;pointer-events:none;line-height:1.2;font-family:var(--brand-font)}
+.bf-ch-copy{left:50px;top:1042px;font-size:18px;color:var(--brand-muted)}
+.bf-ch-num{left:930px;top:1040px;width:60px;text-align:center;font-size:20px;color:var(--brand-muted)}
+.bf-ch-tag{left:1200px;top:810px;width:650px;text-align:right;font-size:32px;font-weight:700;color:var(--brand-background)}
+.bf-ch-hash{left:50px;top:50px;font-size:32px;font-weight:700;color:var(--brand-foreground)}
+.bf-ch-close{left:112.5px;top:474.5px;width:1695.5px;text-align:center;font-size:108px;font-weight:700;line-height:1.4;color:var(--brand-background)}
+/* Photos: cover = above the band; ask = full bleed. .bf-shade is the dark fade that keeps light text readable
    (--a0 left alpha, --a1 right alpha).  The only gradient the frame allows. */
-.td-photo,.td-shade{position:absolute;left:0;top:0;width:1920px;height:1080px}
-.td-cover > .td-photo,.td-cover > .td-shade{height:774.5px}
-.td-photo{background:var(--brand-foreground) center/cover no-repeat}
-.td-shade{background:linear-gradient(90deg,rgba(0,0,0,var(--a0,0)),rgba(0,0,0,var(--a1,var(--a0,0))))}
+.bf-photo,.bf-shade{position:absolute;left:0;top:0;width:1920px;height:1080px}
+.bf-cover > .bf-photo,.bf-cover > .bf-shade{height:774.5px}
+.bf-photo{background:var(--brand-foreground) center/cover no-repeat}
+.bf-shade{background:linear-gradient(90deg,rgba(0,0,0,var(--a0,0)),rgba(0,0,0,var(--a1,var(--a0,0))))}
 /* Frame type */
-.td-abs{position:absolute;margin:0}
-.td-reg{font-weight:400}.td-med{font-weight:500}.td-semi{font-weight:600}.td-bold{font-weight:700}.td-xbold{font-weight:800}
-.td-kicker{font-size:24px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--td-orange);white-space:nowrap;line-height:1.2}
-.td-title{font-size:64px;font-weight:700;line-height:1.15;color:var(--brand-foreground)}
-.td-hl{color:var(--td-orange)}
-.td-lead{font-size:32px;line-height:1.35;color:var(--td-charcoal)}
-.td-cover-tag{font-size:20px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--brand-background);white-space:nowrap;line-height:34.5px}
-.td-cover-title{font-size:64px;font-weight:700;line-height:1.12;text-transform:uppercase;color:var(--brand-background)}
-.td-cover-sub{font-size:36px;font-weight:600;line-height:1.3;color:var(--brand-background)}
-.td-cname{font-size:36px;font-weight:700;line-height:1.15;color:var(--brand-foreground)}
-.td-cdesc{font-size:27px;line-height:1.4;color:var(--td-charcoal)}
-.td-callout{font-size:29px;font-weight:500;line-height:1.3;color:var(--td-charcoal)}
-.td-small{font-size:20px;line-height:1.35;color:var(--td-charcoal)}
-.td-label{font-size:18px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--td-deep-orange);white-space:nowrap;line-height:1.2}
+.bf-abs{position:absolute;margin:0}
+.bf-reg{font-weight:400}.bf-med{font-weight:500}.bf-semi{font-weight:600}.bf-bold{font-weight:700}.bf-xbold{font-weight:800}
+.bf-kicker{font-size:24px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--brand-accent);white-space:nowrap;line-height:1.2}
+.bf-title{font-size:64px;font-weight:700;line-height:1.15;color:var(--brand-foreground)}
+.bf-hl{color:var(--brand-accent)}
+.bf-lead{font-size:32px;line-height:1.35;color:var(--brand-foreground)}
+.bf-cover-tag{font-size:20px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--brand-background);white-space:nowrap;line-height:34.5px}
+.bf-cover-title{font-size:64px;font-weight:700;line-height:1.12;text-transform:uppercase;color:var(--brand-background)}
+.bf-cover-sub{font-size:36px;font-weight:600;line-height:1.3;color:var(--brand-background)}
+.bf-cname{font-size:36px;font-weight:700;line-height:1.15;color:var(--brand-foreground)}
+.bf-cdesc{font-size:27px;line-height:1.4;color:var(--brand-foreground)}
+.bf-callout{font-size:29px;font-weight:500;line-height:1.3;color:var(--brand-foreground)}
+.bf-small{font-size:20px;line-height:1.35;color:var(--brand-foreground)}
+.bf-label{font-size:18px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--brand-foreground);white-space:nowrap;line-height:1.2}
 /* Surfaces: flat colour on white.  No gradients, glows, glass or shadows. */
-.td-card{position:absolute;box-sizing:border-box;background:var(--brand-background);border:1.5px solid var(--td-off-white);border-radius:12px}
-.td-panel{position:absolute;background:var(--td-off-white);border-radius:12px}
-.td-tint{position:absolute;background:var(--td-orange-tint)}
-.td-tint-teal{position:absolute;background:var(--td-teal-tint)}
-.td-accent{position:absolute;width:8px;background:var(--td-orange)}
-.td-num{position:absolute;display:grid;place-items:center;background:var(--td-orange);color:var(--brand-background);font-weight:700}
-.td-badge{position:absolute;display:grid;place-items:center;border-radius:50%;background:var(--td-orange);color:var(--brand-background);font-weight:700}
-.td-bar{position:absolute;display:flex;align-items:center;padding:0 20px;box-sizing:border-box;background:var(--td-orange);color:var(--brand-background);font-size:26px;font-weight:700;white-space:nowrap}
-.td-pillh{position:absolute;display:flex;align-items:center;justify-content:center;border-radius:50px;background:var(--td-orange);color:var(--brand-background);font-size:24px;font-weight:700;white-space:nowrap}
-.td-band{position:absolute;display:flex;align-items:center;padding:0 32px;box-sizing:border-box;background:var(--td-charcoal);border-radius:8px;color:var(--brand-background);font-size:24px;line-height:1.35}
-.td-rule{position:absolute;height:1.5px;background:var(--td-off-white)}
-.td-stat{font-weight:700;line-height:1.15;color:var(--td-orange);white-space:nowrap}
-.td-stat-label{font-size:22px;font-weight:700;line-height:1.3;color:var(--brand-foreground)}
-.td-cta{display:inline-flex;align-items:center;gap:16px;height:72px;padding:0 30px;box-sizing:border-box;border-radius:50px;background:var(--td-orange);color:var(--brand-background);font-size:30px;font-weight:600;white-space:nowrap}
-.td-cta .ic{fill:currentColor;width:32px;height:32px}
-.td-bul{list-style:none;padding:0;margin:0}
-.td-bul li{position:relative;padding-left:20px}
-.td-bul li+li{margin-top:8px}
-.td-bul li::before{content:"\2022";position:absolute;left:0;color:var(--td-orange)}
+.bf-card{position:absolute;box-sizing:border-box;background:var(--brand-background);border:1.5px solid var(--brand-muted);border-radius:12px}
+.bf-panel{position:absolute;background:var(--brand-muted);border-radius:12px}
+.bf-tint{position:absolute;background:var(--brand-background)}
+.bf-accent{position:absolute;width:8px;background:var(--brand-accent)}
+.bf-num{position:absolute;display:grid;place-items:center;background:var(--brand-accent);color:var(--brand-background);font-weight:700}
+.bf-badge{position:absolute;display:grid;place-items:center;border-radius:50%;background:var(--brand-accent);color:var(--brand-background);font-weight:700}
+.bf-bar{position:absolute;display:flex;align-items:center;padding:0 20px;box-sizing:border-box;background:var(--brand-accent);color:var(--brand-background);font-size:26px;font-weight:700;white-space:nowrap}
+.bf-pillh{position:absolute;display:flex;align-items:center;justify-content:center;border-radius:50px;background:var(--brand-accent);color:var(--brand-background);font-size:24px;font-weight:700;white-space:nowrap}
+.bf-band{position:absolute;display:flex;align-items:center;padding:0 32px;box-sizing:border-box;background:var(--brand-foreground);border-radius:8px;color:var(--brand-background);font-size:24px;line-height:1.35}
+.bf-rule{position:absolute;height:1.5px;background:var(--brand-muted)}
+.bf-stat{font-weight:700;line-height:1.15;color:var(--brand-accent);white-space:nowrap}
+.bf-stat-label{font-size:22px;font-weight:700;line-height:1.3;color:var(--brand-foreground)}
+.bf-cta{display:inline-flex;align-items:center;gap:16px;height:72px;padding:0 30px;box-sizing:border-box;border-radius:50px;background:var(--brand-accent);color:var(--brand-background);font-size:30px;font-weight:600;white-space:nowrap}
+.bf-cta .ic{fill:currentColor;width:32px;height:32px}
+.bf-bul{list-style:none;padding:0;margin:0}
+.bf-bul li{position:relative;padding-left:20px}
+.bf-bul li+li{margin-top:8px}
+.bf-bul li::before{content:"\2022";position:absolute;left:0;color:var(--brand-accent)}
 .frame .ic{fill:currentColor}
-/* Fluent icon on a frame scene: size and place the wrapper (<div class="td-ico" style="left;top;width;height">);
+/* Fluent icon on a frame scene: size and place the wrapper (<div class="bf-ico" style="left;top;width;height">);
    the <i class="ic"> inside is swapped for an SVG and keeps only its class */
-.td-ico{position:absolute;color:var(--td-orange)}
-.td-ico .ic{width:100%;height:100%}
+.bf-ico{position:absolute;color:var(--brand-accent)}
+.bf-ico .ic{width:100%;height:100%}
 
 @media (prefers-reduced-motion:reduce){
   [data-beat].in,.cpa-pane[data-beat].in{animation:none}
@@ -1121,22 +1120,22 @@ table.grid.compact td{height:36px;padding:0 8px;font-size:13px}
     var year = new Date().getFullYear();
     document.querySelectorAll(".scene").forEach(function (el, k) {
       var cls = el.classList;
-      if (!cls.contains("frame") || el.querySelector(":scope > .td-ch")) return;
-      var add = function (c, txt, meaningful) { var p = document.createElement("p"); p.className = "td-ch " + c; p.textContent = txt; if (!meaningful) p.setAttribute("aria-hidden", "true"); el.insertBefore(p, el.firstChild); };
-      if (cls.contains("td-closing")) { if (brand.signoff) add("td-ch-close", brand.signoff, true); return; }
-      if (!cls.contains("td-content") && !cls.contains("td-cover") && !cls.contains("td-section")) return;
-      add("td-ch-copy", "\u00a9 " + year + " " + brand.name);
-      add("td-ch-num", String(k + 1));
-      if (cls.contains("td-cover")) {
-        if (brand.tagline) add("td-ch-tag", brand.tagline, true);
+      if (!cls.contains("frame") || el.querySelector(":scope > .bf-ch")) return;
+      var add = function (c, txt, meaningful) { var p = document.createElement("p"); p.className = "bf-ch " + c; p.textContent = txt; if (!meaningful) p.setAttribute("aria-hidden", "true"); el.insertBefore(p, el.firstChild); };
+      if (cls.contains("bf-closing")) { if (brand.signoff) add("bf-ch-close", brand.signoff, true); return; }
+      if (!cls.contains("bf-content") && !cls.contains("bf-cover") && !cls.contains("bf-section")) return;
+      add("bf-ch-copy", "\u00a9 " + year + " " + brand.name);
+      add("bf-ch-num", String(k + 1));
+      if (cls.contains("bf-cover")) {
+        if (brand.tagline) add("bf-ch-tag", brand.tagline, true);
         var logo = brand.logos && (brand.logos.light || brand.logos.primary);
         if (!brand.text_only && logo) {
           var img = document.createElement("img");
-          img.className = "td-ch-logo"; img.src = logo; img.alt = brand.name;
+          img.className = "bf-ch-logo"; img.src = logo; img.alt = brand.name;
           el.insertBefore(img, el.firstChild);
-        } else add("td-ch-name", brand.name, true);
+        } else add("bf-ch-name", brand.name, true);
       }
-      if (cls.contains("td-section") && brand.tagline) add("td-ch-hash", brand.tagline, true);
+      if (cls.contains("bf-section") && brand.tagline) add("bf-ch-hash", brand.tagline, true);
     });
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", chrome); else chrome();

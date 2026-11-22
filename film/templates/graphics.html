@@ -3,42 +3,41 @@
   Concept film graphics, 1920x1080. Text and simulation data come from gfx-data.js;
   brand identity comes from the approved snapshot in brand.js and brand.css.
   ?seg=night    establishing shot (slow push-in + kicker and title), then, when the film has simulation data:
-                phase 1 baseline order (dots = simulated outcomes, Teal on time / Bright Orange late),
+                phase 1 baseline order (dots = simulated outcomes, muted on time / accent late),
                 phase 2 "trying N orders" shuffle with the counter climbing into millions,
-                phase 3 optimized order, all Teal; live stat chips.
+                phase 3 optimized order, all muted; live stat chips.
                 Params: tSim tA0 tA1 tH tS tI0 tI1 end (seconds from window.start()). Without SIM, or with tSim >= end,
                 it is a title card on the photo: use it for a cold open too.
   ?seg=morning  two images crossfading, clock chip, name card, work-list card. Params: tSw tLT tQ end.
-  ?seg=endcard  solid Bright Orange with the white T, as the prototype's divider: kicker, one sentence, the
-                wordmark. For a film whose prototype has no closing scene. Params: tT tL end.
+  ?seg=endcard  accent background with the approved logo or text identity: kicker and one sentence.
+                For a film whose prototype has no closing scene. Params: tT tL end.
   ?seek=<s>     freeze at that time (for stills). window.start() plays from 0.
   A missing image falls back to flat palette colour. Keep the bottom ~190 px clear: captions are burned in there.
 -->
 <link rel="stylesheet" href="brand.css"><style>
-:root{--orange:var(--brand-accent);--teal:var(--brand-accent);--green:var(--brand-foreground);--deep:var(--brand-foreground);--hi:var(--brand-accent);--char:var(--brand-background);--grey:var(--brand-muted);--off:var(--brand-foreground);--otint:var(--brand-background);--ttint:var(--brand-background)}
-html,body{margin:0;width:1920px;height:1080px;overflow:hidden;background:var(--char)}
+html,body{margin:0;width:1920px;height:1080px;overflow:hidden;background:var(--brand-background)}
 *{box-sizing:border-box}
-body{font-family:var(--td-font);color:var(--brand-foreground)}
+body{font-family:var(--brand-font);color:var(--brand-foreground)}
 .layer{position:absolute;inset:0;opacity:0;overflow:hidden}
 .kb{position:absolute;inset:-2%;background-size:cover;background-position:center;will-change:transform}
 .shade{position:absolute;inset:0;background:var(--brand-background);opacity:.7}
-.kicker{font-size:24px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--orange);line-height:1.2}
+.kicker{font-size:24px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--brand-accent);line-height:1.2}
 .title{font-size:72px;font-weight:700;line-height:1.12;margin-top:16px;max-width:1300px}
-.hl{color:var(--orange)}
+.hl{color:var(--brand-accent)}
 .night-text{position:absolute;left:96px;top:120px;padding-left:32px}
-.night-text::before{content:"";position:absolute;left:0;top:4px;bottom:6px;width:8px;background:var(--orange)}
-.chip{position:absolute;display:inline-flex;align-items:center;gap:12px;padding:12px 24px;border-radius:999px;background:var(--brand-background);color:var(--brand-foreground);font-size:26px;font-weight:600;border:1px solid var(--off)}
+.night-text::before{content:"";position:absolute;left:0;top:4px;bottom:6px;width:8px;background:var(--brand-accent)}
+.chip{position:absolute;display:inline-flex;align-items:center;gap:12px;padding:12px 24px;border-radius:999px;background:var(--brand-background);color:var(--brand-foreground);font-size:26px;font-weight:600;border:1px solid var(--brand-foreground)}
 .chip svg{width:28px;height:28px}
-.card{position:absolute;background:var(--brand-background);color:var(--brand-foreground);border-radius:12px;border:1px solid var(--off);opacity:0;transform:translateY(16px)}
-.card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:8px;background:var(--orange);border-radius:12px 0 0 12px}
+.card{position:absolute;background:var(--brand-background);color:var(--brand-foreground);border-radius:12px;border:1px solid var(--brand-foreground);opacity:0;transform:translateY(16px)}
+.card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:8px;background:var(--brand-accent);border-radius:12px 0 0 12px}
 .lt{left:96px;bottom:210px;padding:22px 34px 22px 40px}
 .lt b{display:block;font-size:38px;font-weight:700;line-height:1.2}
-.lt span{display:block;font-size:22px;color:var(--grey);margin-top:4px}
+.lt span{display:block;font-size:22px;color:var(--brand-muted);margin-top:4px}
 .qcard{left:96px;top:190px;width:500px;padding:22px 30px 24px 40px}
-.qcard .k{font-size:18px;letter-spacing:1.5px;text-transform:uppercase;color:var(--deep);font-weight:700}
+.qcard .k{font-size:18px;letter-spacing:1.5px;text-transform:uppercase;color:var(--brand-foreground);font-weight:700}
 .qcard .n{font-size:46px;font-weight:700;margin-top:6px;line-height:1.15}
-.qcard .s{font-size:20px;color:var(--grey);margin-top:6px;line-height:1.4}
-#sim{position:absolute;inset:0;opacity:0;background:var(--char)}
+.qcard .s{font-size:20px;color:var(--brand-muted);margin-top:6px;line-height:1.4}
+#sim{position:absolute;inset:0;opacity:0;background:var(--brand-background)}
 #sim .bg{position:absolute;inset:-3%;background-position:center;background-size:cover;filter:blur(14px) saturate(.6)}
 #sim .dim{position:absolute;inset:0;background:var(--brand-background);opacity:.93}
 #sim canvas{position:absolute;left:0;top:0}
@@ -46,14 +45,13 @@ body{font-family:var(--td-font);color:var(--brand-foreground)}
 .hdr .title{font-size:54px;margin-top:10px}
 .ctr{position:absolute;right:80px;top:52px;text-align:right}
 .ctr b{display:block;font-size:72px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.2}
-.ctr span{font-size:22px;color:var(--off)}
+.ctr span{font-size:22px;color:var(--brand-foreground)}
 .phase{position:absolute;left:80px;top:196px;height:46px;padding:0 22px;border-radius:999px;display:flex;align-items:center;font-size:22px;font-weight:600}
-.stat{position:absolute;top:196px;height:46px;padding:0 18px;border-radius:12px;display:flex;align-items:center;gap:12px;font-size:20px;font-weight:500;color:var(--off);background:var(--brand-background);border:1px solid var(--brand-muted)}
+.stat{position:absolute;top:196px;height:46px;padding:0 18px;border-radius:12px;display:flex;align-items:center;gap:12px;font-size:20px;font-weight:500;color:var(--brand-foreground);background:var(--brand-background);border:1px solid var(--brand-muted)}
 .stat b{font-size:24px;font-weight:700;font-variant-numeric:tabular-nums}
-#endcard{background:var(--orange)}
+#endcard{background:var(--brand-accent)}
 #endcard .k{position:absolute;left:100px;top:330px;font-size:28px;font-weight:700;letter-spacing:3px;text-transform:uppercase}
 #endcard .t{position:absolute;left:100px;top:385px;width:1150px;font-size:72px;font-weight:700;line-height:1.12}
-#endcard .t-mark{position:absolute;left:1320px;top:240px;width:498px;height:500px}
 #endcard .wm{position:absolute;left:100px;top:742px;width:520px;height:auto}
 #endcard .ln{position:absolute;left:100px;top:672px;font-size:26px;font-weight:500}
 #endcard .hl{color:inherit}
@@ -95,7 +93,7 @@ else { $('brand-logo').style.display='none'; $('brand-text').textContent=[BRAND.
 const clamp = (x,a,b)=>Math.max(a,Math.min(b,x));
 const ease = x => x<0?0:x>1?1:(x<.5?2*x*x:1-Math.pow(-2*x+2,2)/2);
 const lerp=(a,b,x)=>a+(b-a)*x;
-const C = {orange:rgb(BRAND.palette.accent).join(','), teal:rgb(BRAND.palette.muted).join(','), off:rgb(BRAND.palette.foreground).join(','), char:rgb(BRAND.palette.background).join(',')};
+const C = {accent:rgb(BRAND.palette.accent).join(','), muted:rgb(BRAND.palette.muted).join(','), foreground:rgb(BRAND.palette.foreground).join(','), background:rgb(BRAND.palette.background).join(',')};
 let T0 = null; window.start = () => { T0 = performance.now(); };
 // ---------- text and images from gfx-data.js ----------
 if (G.title) document.title = G.title;
@@ -105,10 +103,10 @@ function rich(el, s){ el.textContent=''; String(s||'').split(/(\*[^*]+\*)/).forE
   else el.appendChild(document.createTextNode(p)); }); }
 const IM = G.images || {};
 function setImg(el, key, fallback){ if (IM[key]) el.style.backgroundImage = `url("${IM[key]}")`; else el.style.background = fallback; }
-setImg($('night').querySelector('.kb'), 'establishing', 'var(--char)');
-setImg(document.querySelector('#sim .bg'), 'establishing', 'var(--char)');
-setImg($('m1').querySelector('.kb'), 'arrival', 'var(--ttint)');
-setImg($('m2').querySelector('.kb'), 'desk', 'var(--otint)');
+setImg($('night').querySelector('.kb'), 'establishing', 'var(--brand-background)');
+setImg(document.querySelector('#sim .bg'), 'establishing', 'var(--brand-background)');
+setImg($('m1').querySelector('.kb'), 'arrival', 'var(--brand-background)');
+setImg($('m2').querySelector('.kb'), 'desk', 'var(--brand-background)');
 if (!IM.establishing) $('night').querySelector('.shade').style.display='none';
 $('n_eb').textContent = G.night.eyebrow||''; rich($('n_ti'), G.night.title);
 if (HAS_SIM) { $('s_eb').textContent = S.eyebrow||''; rich($('s_ti'), S.title); $('s_unit').textContent = S.counter_unit||''; }
@@ -155,29 +153,29 @@ function drawSim(t){
   x.clearRect(0,0,1920,1080);
   const tA0=P('tA0'), tA1=P('tA1'), tH=P('tH'), tS=P('tS'), tI0=P('tI0'), tI1=P('tI1');
   const A1=AX.end, O0=AX.overflow[0], O1=AX.overflow[1];
-  x.font=`600 17px "${BRAND.typography.family}"`; x.fillStyle=`rgba(${C.off},.9)`; x.textAlign='center';
-  AX.ticks.forEach(([h,l])=>{ const X=xt(h); x.fillText(l,X,TOP-18); x.strokeStyle=`rgba(${C.off},.08)`; x.lineWidth=1; x.beginPath(); x.moveTo(X,TOP-6); x.lineTo(X,TOP+N*RH); x.stroke(); });
-  x.fillStyle=`rgba(${C.off},.05)`; x.fillRect(TZ0-14,TOP-6,TZ1-TZ0+28,N*RH+6);
-  x.fillStyle=`rgba(${C.off},.9)`; x.fillText(AX.overflow_label,(TZ0+TZ1)/2,TOP-18);
-  (AX.bands||[]).forEach(([a,b])=>{ x.fillStyle=`rgba(${C.off},.04)`; x.fillRect(xt(a),TOP-6,xt(b)-xt(a),N*RH+6); });
+  x.font=`600 17px "${BRAND.typography.family}"`; x.fillStyle=`rgba(${C.foreground},.9)`; x.textAlign='center';
+  AX.ticks.forEach(([h,l])=>{ const X=xt(h); x.fillText(l,X,TOP-18); x.strokeStyle=`rgba(${C.foreground},.08)`; x.lineWidth=1; x.beginPath(); x.moveTo(X,TOP-6); x.lineTo(X,TOP+N*RH); x.stroke(); });
+  x.fillStyle=`rgba(${C.foreground},.05)`; x.fillRect(TZ0-14,TOP-6,TZ1-TZ0+28,N*RH+6);
+  x.fillStyle=`rgba(${C.foreground},.9)`; x.fillText(AX.overflow_label,(TZ0+TZ1)/2,TOP-18);
+  (AX.bands||[]).forEach(([a,b])=>{ x.fillStyle=`rgba(${C.foreground},.04)`; x.fillRect(xt(a),TOP-6,xt(b)-xt(a),N*RH+6); });
   const showD = t>=tI0;
   for(let i=0;i<N;i++){
     const r=rows[i]; const y=TOP+slotAt(i,t)*RH+RH/2; const isLate=late4.has(i);
-    if(isLate && t>=tH){ const a=clamp((t-tH)/0.4,0,1); x.fillStyle = showD ? `rgba(${C.teal},${.12*a})` : `rgba(${C.orange},${.13*a})`; x.fillRect(L-12,y-RH/2+3,TZ1-L+26,RH-6); }
-    x.textAlign='left'; x.fillStyle=`rgb(${C.off})`; x.font=`600 19px "${BRAND.typography.family}"`; x.fillText(r.name,L,y-3);
-    x.fillStyle=`rgba(${C.off},.92)`; x.font=`400 15px "${BRAND.typography.family}"`; x.fillText(shortProd(r.product)+' · '+dlLabel(r.dl),L,y+16);
-    if(isLate && t>=tH){ const txt= showD?S.badge.ok:S.badge.late; x.font=`600 15px "${BRAND.typography.family}"`; const w=x.measureText(txt).width+20; const X=470; x.fillStyle= showD?`rgb(${C.teal})`:`rgb(${C.orange})`; roundRect(X,y-13,w,26,13); x.fill(); x.fillStyle=`rgb(${C.char})`; x.fillText(txt,X+10,y+6); }
-    if(r.dl<=O1){ const X=xt(r.dl); x.strokeStyle=`rgba(${C.off},.9)`; x.lineWidth=2; x.beginPath(); x.moveTo(X,y-15); x.lineTo(X,y+15); x.stroke(); x.fillStyle=`rgb(${C.off})`; x.beginPath(); x.moveTo(X,y-15); x.lineTo(X+9,y-11); x.lineTo(X,y-7); x.fill(); }
+    if(isLate && t>=tH){ const a=clamp((t-tH)/0.4,0,1); x.fillStyle = showD ? `rgba(${C.muted},${.12*a})` : `rgba(${C.accent},${.13*a})`; x.fillRect(L-12,y-RH/2+3,TZ1-L+26,RH-6); }
+    x.textAlign='left'; x.fillStyle=`rgb(${C.foreground})`; x.font=`600 19px "${BRAND.typography.family}"`; x.fillText(r.name,L,y-3);
+    x.fillStyle=`rgba(${C.foreground},.92)`; x.font=`400 15px "${BRAND.typography.family}"`; x.fillText(shortProd(r.product)+' · '+dlLabel(r.dl),L,y+16);
+    if(isLate && t>=tH){ const txt= showD?S.badge.ok:S.badge.late; x.font=`600 15px "${BRAND.typography.family}"`; const w=x.measureText(txt).width+20; const X=470; x.fillStyle= showD?`rgb(${C.muted})`:`rgb(${C.accent})`; roundRect(X,y-13,w,26,13); x.fill(); x.fillStyle=`rgb(${C.background})`; x.fillText(txt,X+10,y+6); }
+    if(r.dl<=O1){ const X=xt(r.dl); x.strokeStyle=`rgba(${C.foreground},.9)`; x.lineWidth=2; x.beginPath(); x.moveTo(X,y-15); x.lineTo(X,y+15); x.stroke(); x.fillStyle=`rgb(${C.foreground})`; x.beginPath(); x.moveTo(X,y-15); x.lineTo(X+9,y-11); x.lineTo(X,y-7); x.fill(); }
     // dots: one per simulated day; A = baseline order, D = optimized order
     const series = showD ? r.D : r.A; const tt0 = showD?tI0:tA0, tt1 = showD?tI1:tA1;
     let fade=1; if(!showD && t>tS) fade=clamp(1-(t-tS)/0.6,0,1);
     if(fade<=0) continue;
     const n = Math.floor(clamp((t-tt0)/(tt1-tt0),0,1)*series.length);
     for(let k=0;k<n;k++){ const v=series[k]; const on=v<=r.dl; const X=xt(v); const age=(t-(tt0+(k/series.length)*(tt1-tt0)));
-      const a=clamp(age/0.25,0,1)*fade; x.fillStyle = on?`rgba(${C.teal},${.6*a})`:`rgba(${C.orange},${.65*a})`; x.beginPath(); x.arc(v>A1&&v<O0?TZ0-8:X, y+jit[i][k%300], 2.7, 0, 6.3); x.fill(); }
+      const a=clamp(age/0.25,0,1)*fade; x.fillStyle = on?`rgba(${C.muted},${.6*a})`:`rgba(${C.accent},${.65*a})`; x.beginPath(); x.arc(v>A1&&v<O0?TZ0-8:X, y+jit[i][k%300], 2.7, 0, 6.3); x.fill(); }
   }
-  // scan band during the search: flat Teal, no gradient
-  if(t>=tS && t<tI0){ const p=((t-tS)/(tI0-tS)); const X=PX0+(TZ1-PX0)*((p*3)%1); x.fillStyle=`rgba(${C.teal},.16)`; x.fillRect(X-120,TOP-6,120,N*RH+6); }
+  // Scan band during the search uses the configured muted color.
+  if(t>=tS && t<tI0){ const p=((t-tS)/(tI0-tS)); const X=PX0+(TZ1-PX0)*((p*3)%1); x.fillStyle=`rgba(${C.muted},.16)`; x.fillRect(X-120,TOP-6,120,N*RH+6); }
 }
 function fmt(n){ return Math.round(n).toLocaleString('en-US'); }
 function frameNight(t){
@@ -193,12 +191,12 @@ function frameNight(t){
   let c=0; if(t>=tA0) c = CB*clamp((t-tA0)/(tS-tA0),0,1); if(t>=tS) c = CB + (SIM.futures-CB)*ease(clamp((t-tS)/(tI1-tS),0,1));
   $('ctr').textContent=fmt(c);
   const ph=$('phase'), tI0=P('tI0'), tH=P('tH');
-  if(t<tS){ ph.textContent=S.phase.baseline; ph.style.background=`rgba(${C.off},.12)`; ph.style.color=`rgb(${C.off})`; }
-  else if(t<tI0){ ph.textContent=S.phase.search; ph.style.background=`rgba(${C.teal},.2)`; ph.style.color=`rgb(${C.off})`; }
-  else { ph.textContent=S.phase.optimized; ph.style.background=`rgb(${C.teal})`; ph.style.color=`rgb(${C.char})`; }
+  if(t<tS){ ph.textContent=S.phase.baseline; ph.style.background=`rgba(${C.foreground},.12)`; ph.style.color=`rgb(${C.foreground})`; }
+  else if(t<tI0){ ph.textContent=S.phase.search; ph.style.background=`rgba(${C.muted},.2)`; ph.style.color=`rgb(${C.foreground})`; }
+  else { ph.textContent=S.phase.optimized; ph.style.background=`rgb(${C.muted})`; ph.style.color=`rgb(${C.background})`; }
   const sv = t>=tI0+1.2, sa = t>=tH-0.2;
   S.stats.forEach((st,k)=>{ $('st'+(k+1)).style.opacity=(sa?1:0); const v=$('v'+(k+1));
-    v.textContent = sv ? st.after : st.before; v.style.color = sv ? `rgb(${C.teal})` : (st.before_color||`rgb(${C.off})`); });
+    v.textContent = sv ? st.after : st.before; v.style.color = sv ? `rgb(${C.muted})` : (st.before_color||`rgb(${C.foreground})`); });
 }
 function frameMorning(t){
   const tSw=P('tSw'), tLT=P('tLT'), tQ=P('tQ'), end=P('end');

@@ -6,7 +6,7 @@ Usage (from the build folder, after voice.py):  python autoplan.py [--outline ou
 narration.txt, with stage directions (lines starting with "@"; "#" lines are comments):
 
     @ cover                 prototype scene "cover" at its opening stop (beat 0)
-    Host: This is a concept from Tredence ...
+    Host: This is an illustrative concept ...
     @ gfx night             a graphics sequence (night | morning | endcard); optional overrides:
     Host: At two in the morning ...            @ gfx night tSim=e(1)+0.3 tS=s(3)  (s(n)/e(n): start/end of its nth line)
     @ ask                   scene "ask" opens (a new segment, because the story jumped)
@@ -15,7 +15,7 @@ narration.txt, with stage directions (lines starting with "@"; "#" lines are com
     Host: The agent answers from the overnight plan ...
     @ ask end               the scene's last beat
     @ hold 1.5              an extra pause before whatever comes next
-    @ closing               the #beyondpossible sign-off: no line, holds pacing.end_hold_s at the end
+    @ closing               the configured sign-off: no line, holds pacing.end_hold_s at the end
 
 Each step comes just after the previous line ends, and the line about a stop starts pacing.lead_s after the step
 (pacing.scene_lead_s on a new scene), so the screen changes a breath before the narration talks about it.  A stop

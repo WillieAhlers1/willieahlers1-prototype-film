@@ -142,15 +142,20 @@ class BrowserCaptureTests(unittest.TestCase):
     def test_real_engine_driven_warmup_and_steps(self):
         proto = self.d / "proto"
         proto.mkdir()
-        shutil.copy(ROOT / "film" / "examples" / "woodgrove-sample" / "prototype" / "prototype.html",
-                    proto / "prototype.html")
         shutil.copytree(ROOT / "assets" / "kit", proto / "kit")
-        html = (proto / "prototype.html").read_text(encoding="utf-8")
-        html = html.replace('<script src="kit/proto-style.js">',
-                            '<script>window.PROTOTYPE_BRAND={schema_version:1,approved:true,asset_permissions:true,name:"Test",'
-                            'palette:{accent:"#008800",background:"#ffffff",foreground:"#222222",muted:"#eeeeee"},'
-                            'typography:{family:"Arial",files:[],system_font:true},text_only:true};</script>'
-                            '<script src="kit/proto-style.js">')
+        html = (
+            '<!doctype html><html><head><meta charset="utf-8">'
+            '<script>window.PROTOTYPE_BRAND={schema_version:1,approved:true,asset_permissions:true,name:"Test",'
+            'palette:{accent:"#008800",background:"#ffffff",foreground:"#222222",muted:"#eeeeee"},'
+            'typography:{family:"Arial",files:[],system_font:true},text_only:true};</script>'
+            '<script src="kit/proto-style.js"></script></head>'
+            '<body data-concept="Concept demo - Fictitious data"><main class="stage">'
+            '<section class="scene zoom" id="ask">'
+            '<h1 style="position:absolute;left:100px;top:100px">People decide</h1>'
+            '<p data-beat="1" style="position:absolute;left:100px;top:300px;font-size:32px">'
+            'Agents prepare the work for review.</p></section>'
+            '<section class="scene zoom" id="close"><h1>One team, a whole outcome</h1></section>'
+            '</main><script src="kit/proto.js"></script></body></html>')
         (proto / "prototype.html").write_text(html, encoding="utf-8")
         config = json.loads((self.d / "film.json").read_text())
         config["prototype"] = {"dir": "proto", "file": "prototype.html"}

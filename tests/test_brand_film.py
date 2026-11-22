@@ -22,7 +22,7 @@ class BrandFilmTests(unittest.TestCase):
         self.root = Path(self.tmp.name)
         self.addCleanup(self.tmp.cleanup)
         self.env = dict(os.environ, PYTHONIOENCODING="utf-8")
-        for key in ("TREDENCE_HOME", "PROTOTYPE_FILM_HOME", "FILM_CONFIG", "SPEECH_KEY",
+        for key in ("PROTOTYPE_FILM_HOME", "FILM_CONFIG", "SPEECH_KEY",
                     "AZURE_SPEECH_KEY", "SPEECH_REGION", "AZURE_SPEECH_REGION", "SPEECH_ENDPOINT"):
             self.env.pop(key, None)
 
@@ -55,7 +55,6 @@ class BrandFilmTests(unittest.TestCase):
             self.assertEqual(json.loads((build / "brand" / "brand.json").read_text())["name"], name)
             self.assertIn(color, (build / "brand.css").read_text())
             self.assertEqual((build / "brand" / "logo.svg").read_text(), f"<svg>{name}</svg>")
-            self.assertNotIn("Tredence", (build / "narration.txt").read_text())
             self.assertIn("concept from " + name, (build / "narration.txt").read_text())
             self.assertEqual(len(list((build / "fonts").iterdir())), 1)
             self.assertIn("brand.js", (build / "graphics.html").read_text())
@@ -72,7 +71,7 @@ class BrandFilmTests(unittest.TestCase):
                                cwd=build, env=self.env, capture_output=True, text=True)
             self.assertEqual(r.returncode, 0, r.stderr)
             self.assertIn(name + " spoken", r.stdout)
-            self.assertNotIn("Tredence", r.stdout)
+            self.assertNotIn("Beta spoken" if name == "Alpha" else "Alpha spoken", r.stdout)
 
     def test_validation_snapshot_update_and_embedded_mismatch(self):
         one, data = self.make_brand("Alpha")
@@ -122,15 +121,12 @@ class BrandFilmTests(unittest.TestCase):
         brand.load_brand(self.root / "standalone-build" / "brand" / "brand.json")
         self.assertEqual((self.root / "standalone-build" / "brand" / "brand.json").exists(), True)
 
-    def test_voice_preset_and_legacy_home(self):
+    def test_voice_preset_and_explicit_runtime_home(self):
         manifest, _ = self.make_brand("Alpha")
         workspace = self.root / "Alpha"
-        legacy = workspace / ".tredence"
-        legacy.mkdir()
-        # A new workspace home exists for the brand, so explicit legacy configuration still wins.
-        home = self.root / "legacy"
+        home = self.root / "runtime"
         home.mkdir()
-        self.env["TREDENCE_HOME"] = str(home)
+        self.env["PROTOTYPE_FILM_HOME"] = str(home)
         build = self.root / "voice-build"
         r = self.init(build, "--workspace", workspace)
         self.assertEqual(r.returncode, 0, r.stderr)
@@ -162,17 +158,39 @@ class BrandFilmTests(unittest.TestCase):
         self.assertEqual(r.returncode, 0, r.stderr)
         self.assertEqual(r.stdout.strip(), "bf_emma")
 
-    def test_existing_workspace_profile_precedes_brand_only_home(self):
-        manifest, _ = self.make_brand("Legacy")
+    def test_existing_workspace_profile_is_reused(self):
+        manifest, _ = self.make_brand("SavedProfile")
         workspace = manifest.parent.parent
-        legacy = workspace / ".tredence"
-        legacy.mkdir()
-        (legacy / "voice.json").write_text('{"engine":"kokoro","name":"bf_emma"}')
-        build = self.root / "legacy-build"
+        home = workspace / ".prototype-film"
+        (home / "voice.json").write_text('{"engine":"kokoro","name":"bf_emma"}')
+        build = self.root / "profile-build"
         r = self.init(build, "--workspace", workspace)
         self.assertEqual(r.returncode, 0, r.stderr)
-        self.assertIn("legacy workspace .tredence", r.stdout)
-        self.assertEqual(json.loads((build / "film.json").read_text())["home"], str(legacy))
+        self.assertEqual(json.loads((build / "film.json").read_text())["home"], str(home))
+        r = subprocess.run([sys.executable, "-c",
+                            "import voice; from filmcfg import load; c=load(); print(voice.profile(c,voice.home_dir(c))['name'])"],
+                           cwd=build, env=self.env, capture_output=True, text=True)
+        self.assertEqual(r.returncode, 0, r.stderr)
+        self.assertEqual(r.stdout.strip(), "bf_emma")
+
+    def test_explicit_film_home_precedes_environment_and_survives_refresh(self):
+        manifest, _ = self.make_brand("ConfiguredHome")
+        build = self.root / "configured-home-build"
+        r = self.init(build, "--brand", manifest)
+        self.assertEqual(r.returncode, 0, r.stderr)
+        home = self.root / "custom-models"
+        cfg = json.loads((build / "film.json").read_text())
+        cfg["home"] = str(home)
+        (build / "film.json").write_text(json.dumps(cfg))
+        self.env["PROTOTYPE_FILM_HOME"] = str(self.root / "environment-models")
+        r = self.init(build, "--brand", manifest)
+        self.assertEqual(r.returncode, 0, r.stderr)
+        self.assertEqual(json.loads((build / "film.json").read_text())["home"], str(home))
+        r = subprocess.run([sys.executable, "-c",
+                            "from filmcfg import load, runtime_home; print(runtime_home(load()))"],
+                           cwd=build, env=self.env, capture_output=True, text=True)
+        self.assertEqual(r.returncode, 0, r.stderr)
+        self.assertEqual(Path(r.stdout.strip()), home)
 
     def test_brand_manifest_selects_workspace_runtime_home(self):
         manifest, _ = self.make_brand("WorkspaceBrand")
@@ -212,17 +230,13 @@ class BrandFilmTests(unittest.TestCase):
         self.assertIn("non-embedded reference", r.stderr)
         self.assertFalse(build.exists())
 
-    def test_legacy_example_requires_explicit_tredence_brand(self):
+    def test_removed_example_option_is_rejected_before_mutation(self):
         manifest, _ = self.make_brand("OtherBrand")
         build = self.root / "example-build"
-        r = self.init(build, "--brand", manifest, "--example", "woodgrove-sample")
+        r = self.init(build, "--brand", manifest, "--example", "sample")
         self.assertNotEqual(r.returncode, 0)
-        self.assertIn("Tredence brand", r.stderr)
+        self.assertIn("unrecognized arguments", r.stderr)
         self.assertFalse(build.exists())
-        legacy, _ = self.make_brand("Tredence")
-        r = self.init(build, "--brand", legacy, "--example", "woodgrove-sample")
-        self.assertEqual(r.returncode, 0, r.stderr)
-        self.assertIn("Tredence", (build / "narration.txt").read_text())
 
     def test_two_brand_graphics_and_caption_render(self):
         try:

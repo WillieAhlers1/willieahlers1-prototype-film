@@ -1,6 +1,6 @@
 # Timing plan skeleton for a concept film. new_film.py copies it to the build folder as plan.py. Rename
 # the scene functions and cue ids to match the prototype's scenes and cues.json, then: python plan.py -> plan.json
-# (and a printed timeline). The worked example is examples/woodgrove-sample/plan.py.
+# (and a printed timeline). Fill the cue timings from this film's measured narration.
 #
 # Fallback only: autoplan.py builds plan.json from narration.txt's stage directions.  Use this hand-written
 # press schedule (with film.json prototype.driven false) only for a prototype older than engine 1.14.
@@ -46,7 +46,7 @@ g1 = dict(tSim=tSim,                 # establishing shot hands over to the simul
           tA0=5.6, tA1=c3 - 1.0,     # baseline dots stream in
           tH=c3 - 0.2,               # late rows highlighted + stat chips appear (as the "too late" line starts)
           tS=c3 + 3.0)               # search starts: shuffles, counter climbs into millions
-g1["tI0"] = g1["tS"] + 2.5; g1["tI1"] = g1["tI0"] + 4.0   # optimized order, all Teal
+g1["tI0"] = g1["tS"] + 2.5; g1["tI1"] = g1["tI0"] + 4.0   # optimized order
 g1["end"] = max(g1["tI1"] + 1.6, E("C3", c3) + 1.0)
 P.gfx("G1", "night", g1, [("C1", c1), ("C2", c2), ("C3", c3)])
 # Without simulation data, G1 is a title card on the photo:

@@ -16,7 +16,7 @@ class SkillContractTests(unittest.TestCase):
         self.assertLessEqual(len(description), 1024)
         self.assertIn("branding", description)
         self.assertIn("film", description)
-        self.assertNotIn("prototype-film-tredence", description)
+        self.assertIn("any brand", description)
         self.assertLess(len(text.splitlines()), 500)
         for relative in re.findall(r"\]\(\./([^)#]+)", text):
             with self.subTest(reference=relative):

@@ -21,7 +21,7 @@ SCRIPTS = ROOT / "film" / "scripts"
 class EndToEndTests(unittest.TestCase):
     def run_command(self, command, cwd=None):
         env = dict(os.environ, PYTHONIOENCODING="utf-8")
-        for key in ("FILM_CONFIG", "PROTOTYPE_FILM_HOME", "TREDENCE_HOME"):
+        for key in ("FILM_CONFIG", "PROTOTYPE_FILM_HOME"):
             env.pop(key, None)
         result = subprocess.run(command, cwd=cwd or ROOT, env=env, capture_output=True,
                                 text=True, encoding="utf-8", errors="replace", timeout=180)
@@ -53,10 +53,10 @@ class EndToEndTests(unittest.TestCase):
                         '<script src="brand.js"></script><script src="kit/proto-style.js"></script>'
                         '<link rel="stylesheet" href="brand.css"></head>'
                         '<body data-concept="Concept demo - Fictitious data"><main class="stage">'
-                        f'<section class="scene frame td-content" id="cover" data-note="{intro}">'
-                        '<h1 class="td-abs td-title" style="left:50px;top:115px;width:1700px">'
+                        f'<section class="scene frame bf-content" id="cover" data-note="{intro}">'
+                        '<h1 class="bf-abs bf-title" style="left:50px;top:115px;width:1700px">'
                         'One team, a whole outcome</h1>'
-                        f'<p class="td-abs td-lead" style="left:50px;top:300px;width:1700px" '
+                        f'<p class="bf-abs bf-lead" style="left:50px;top:300px;width:1700px" '
                         f'data-beat="1" data-hold="3000" data-note="{action}">'
                         'Agents prepare. People decide.</p></section></main>'
                         '<script src="kit/icons.js"></script><script src="kit/proto.js"></script></body></html>'
@@ -68,7 +68,8 @@ class EndToEndTests(unittest.TestCase):
                     packed = output / "dist" / "first.html"
                     self.run_command([sys.executable, str(ASSETS / "film_ready.py"), str(packed),
                                       "--target", "0:12"])
-                    self.assertNotIn("Tredence", packed.read_text(encoding="utf-8"))
+                    self.assertNotIn("Harbor" if name == "Northstar" else "Northstar",
+                                     packed.read_text(encoding="utf-8"))
                     build = root / (name + "-film")
                     self.run_command([sys.executable, str(SCRIPTS / "new_film.py"), str(build),
                                       "--workspace", str(workspace), "--prototype", str(packed)])
@@ -106,6 +107,8 @@ class EndToEndTests(unittest.TestCase):
                     self.run_command([sys.executable, "assemble.py", "all"], build)
                     film = build / "work" / "film.mp4"
                     self.assertGreater(film.stat().st_size, 1000)
+                    self.run_command([sys.executable, "contact_sheet.py"], build)
+                    self.assertTrue(list((build / "review").glob("*.jpg")))
                     import imageio_ffmpeg
                     inspected = subprocess.run([imageio_ffmpeg.get_ffmpeg_exe(), "-hide_banner", "-i", str(film)],
                                                capture_output=True, text=True, encoding="utf-8", errors="replace")

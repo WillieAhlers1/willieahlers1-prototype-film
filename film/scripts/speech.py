@@ -5,9 +5,10 @@ Mispronounced words come from the voice guessing: "$1.17M" read as "dollar one p
 
 1. normalise(): money, times, multipliers, "24/7", "e.g." and friends are rewritten the way a presenter says them.
 2. The lexicon replaces whole words or phrases, case-sensitively: "say" entries with a respelling ("ERP" -> "E R P"),
-   "ipa" entries with exact phonemes for Kokoro ("Tredence" -> "tɹˈɛdəns").  Three lists are merged, later wins:
-     <skill>/film/lexicon/tredence.json      shared Tredence and Microsoft names (ships with the skill)
-     <home>/lexicon.json                     yours, kept across films (<home> = film.json "home", ~/.tredence)
+   "ipa" entries with exact phonemes. Four lists are merged, later wins:
+     <skill>/film/lexicon/generic.json       shared generic terms
+     <build>/brand/brand.json                approved brand pronunciations
+     <home>/lexicon.json                     yours, kept across films
      <build>/lexicon.json                    this film's people, companies and products
 3. suspects(): words still worth a listen (all-caps acronyms, mixed letters and digits, unusual names) that no list
    covers.  voice.py prints them; add each to the film's lexicon.json once you've heard it.
@@ -85,17 +86,23 @@ def _load(p):
 
 
 def lexicon_paths(home=None, build="."):
-    home = home or os.environ.get("TREDENCE_HOME") or str(Path.home() / ".tredence")
-    shared = HERE.parent / "lexicon" / "tredence.json"          # in the skill: film/lexicon
+    from filmcfg import runtime_home
+    home = home or runtime_home({})
+    shared = HERE.parent / "lexicon" / "generic.json"
     if not shared.exists():
-        shared = HERE / "lexicon" / "tredence.json"               # in a build folder: copied next to the scripts
-    return [shared, Path(home) / "lexicon.json", Path(build) / "lexicon.json"]
+        shared = HERE / "lexicon" / "generic.json"
+    return [shared, Path(build) / "brand" / "brand.json", Path(home) / "lexicon.json", Path(build) / "lexicon.json"]
 
 
 def load_lexicon(home=None, build="."):
     say, ipa = {}, {}
     for p in lexicon_paths(home, build):
-        s, i = _load(p)
+        if p.name == "brand.json" and p.exists():
+            with open(p, encoding="utf-8") as f:
+                pronunciations = json.load(f).get("pronunciations", {})
+            s, i = pronunciations.get("say", {}), pronunciations.get("ipa", {})
+        else:
+            s, i = _load(p)
         say.update(s); ipa.update(i)
     return say, ipa
 
@@ -112,7 +119,7 @@ def apply_say(text, say):
 
 def spoken(text, say, ipa=None):
     """The text as it will be voiced (respellings applied, numbers normalised); ipa words are marked /word/."""
-    t = apply_say(normalise(apply_say(text, say)), say)
+    t = normalise(apply_say(text, say))
     rx = _rx(ipa or {})
     return rx.sub(lambda m: f"/{m.group(1)}/", t) if rx else t
 
@@ -155,7 +162,8 @@ def suspects(text, say, ipa):
 
 def read_script(path, prefix="Host: "):
     pre = prefix.strip()
-    return [s[len(pre):].strip() for s in (r.strip() for r in open(path, encoding="utf-8")) if s.startswith(pre)]
+    with open(path, encoding="utf-8") as f:
+        return [s[len(pre):].strip() for s in (r.strip() for r in f) if s.startswith(pre)]
 
 
 if __name__ == "__main__":

@@ -2,10 +2,10 @@
 
 # One voice. One idea per line, 1.5-13 s spoken. 25-40 lines for a 2:30-3:30 film.
 # Each "Host:" line becomes one cue (A1, B1, ...) in film.json narration.cue_ids, in order.
-# The Tredence voice (references/narration.md): start in the customer's world; the last mile (the everyday decision
+# Start in the customer's world; the last mile (the everyday decision
 # that changes); "we" and "you" together; calm, specific, confident, never promotional; no exclamation marks.
 # Never: leverage, unlock, journey, flywheel, empower, seamless, best-in-class, world-class, game-changing,
-# synergy, harness, cutting-edge, "Tredence Inc." or TREDENCE in capitals.
+# synergy, harness, cutting-edge.
 # Think big, claim small: the business shift is ambitious; every number is from the brief's data sheet or the
 # engine output, rounded truthfully for the ear ("seven or eight of eleven" for 7.7, "about one in five" for 21%),
 # and impact is called illustrative once. Time freed is capacity for more or better work, never a cut in staff.
@@ -14,7 +14,7 @@
 # Close: how the business could work and what it could be worth, then one ask, spoken as the ask appears on screen.
 # Lines starting with # are ignored. check_film.py checks all of this.
 
-Host: This is a concept from Tredence for <Customer or industry>. We'll follow one <role>, <Persona name>, at <Fictitious company>, through one <weekday>. The company, the people and the numbers are fictional.
+Host: This is a concept from <Brand> for <Customer or industry>. We'll follow one <role>, <Persona name>, at <Fictitious company>, through one <weekday>. The company, the people and the numbers are fictional.
 Host: Every <period>, <Persona first name> decides <the everyday decision that doesn't change today>.
 Host: The data to decide it well already exists. It's in <place one>, <place two> and <place three>, and nobody has time to pull it together.
 Host: So today, <how the decision gets made instead: by habit, by arrival order, by the loudest request>.

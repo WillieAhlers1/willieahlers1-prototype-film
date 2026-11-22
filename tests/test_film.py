@@ -34,10 +34,9 @@ class SpeechTests(unittest.TestCase):
 
     def test_lexicon_and_suspects(self):
         say, ipa = speech.load_lexicon(home=tempfile.mkdtemp(), build=tempfile.mkdtemp())
-        self.assertIn("Tredence", ipa)
-        sp = speech.spoken("Orders in D365 and the ERP feed Power BI.", say, ipa)
-        self.assertEqual(sp, "Orders in Dynamics three sixty-five and the E R P feed Power B I.")
-        self.assertEqual(speech.spoken("Tredence and Contoso", say, ipa), "/Tredence/ and /Contoso/")
+        self.assertNotIn("Tredence", ipa)
+        sp = speech.spoken("Orders in the ERP.", say, ipa)
+        self.assertEqual(sp, "Orders in the E R P.")
         self.assertEqual(speech.suspects("The OEE on line X7 in SmartPlan, per the CEO.", say, ipa), ["OEE", "SmartPlan", "X7"])
         self.assertEqual(speech.split_ipa("at Woodgrove Bank", {"Woodgrove": "wˈʊdɡɹoʊv"}),
                          [(False, "at "), (True, "wˈʊdɡɹoʊv"), (False, " Bank")])

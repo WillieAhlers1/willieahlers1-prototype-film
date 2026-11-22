@@ -7,7 +7,7 @@
 # per slot, optimized], "totals": {...engine totals...}, "futures": total simulated days}.
 # Stat chip "before"/"after" strings may use format fields against the totals, e.g. "{t[today_order][ontime_files]:.1f}
 # of 11", so the numbers on screen come from the engine, never typed.
-# Images that don't exist are dropped, and graphics.html falls back to flat Tredence colour for them.
+# Images that don't exist are dropped, and graphics.html uses the brand background.
 import json
 import os
 

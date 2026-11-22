@@ -116,7 +116,7 @@ def main():
         st = scenes[si]["beats"][b]
         return st.get("after", 0) / 1000 if st.get("trigger") == "auto" else 0.0
 
-    seg = None; segs = []; gfx_count = [0]; proto_count = [0]
+    seg = None; segs = []; gfx_count = [0]; proto_count = [0]; visual_times = []
 
     def close_seg(extra_hold=0.0):
         nonlocal seg
@@ -134,6 +134,7 @@ def main():
         seg = dict(name=f"P{proto_count[0]}", kind="proto", hash="#" + scenes[si]["id"], replay=False, driven=True,
                    presses=[], steps=[], cues=[], scenes=[[scenes[si]["id"], 0.0]], cur=(si, 0), t_cur=0.0,
                    vis_ready=visual(si, 0), line_end=0.0, hold=0.0)
+        visual_times.append(visual(si, 0))
 
     def step_to(si, b):
         """Advance the open proto segment to stop (si, b), one stop at a time."""
@@ -150,6 +151,7 @@ def main():
             if nb[1] == 0:
                 seg["scenes"].append([scenes[nb[0]]["id"], round(t, 3)])
             seg["cur"] = nb; seg["t_cur"] = t; seg["vis_ready"] = t + visual(*nb)
+            visual_times.append(visual(*nb))
 
     def place_lines(lines, lead):
         t0 = seg["t_cur"] + lead
@@ -232,6 +234,13 @@ def main():
         for k in ("cur", "t_cur", "vis_ready", "line_end", "hold"):
             s.pop(k, None)
     P.segs = segs
+    try:
+        P.report_pacing()
+    except (ValueError, KeyError) as e:
+        raise SystemExit(f"pacing error: {e}")
+    if visual_times:
+        print(f"pacing: {len(visual_times)} stops require {sum(visual_times):.2f}s total reading/streaming/settling "
+              f"(overlaps narration)")
     if a.dry:
         print(json.dumps(segs, indent=1)); return
     P.write()

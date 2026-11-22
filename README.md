@@ -1,31 +1,69 @@
-# prototype-film-tredence
+# prototype-film
 
-A Claude skill that builds clickable Tredence "art of the possible" prototypes (one self-contained HTML file) and,
-when the user wants, turns them into a narrated, captioned 1080p concept film (one MP4).  It merges the earlier
-`prototype-tredence` and `concept-film-tredence` skills.
+A skill for any brand: build a clickable, self-contained concept HTML prototype, then optionally a narrated,
+captioned 1080p MP4. Branding is approved once per workspace and reused, not requested for every concept.
+Nothing connects to real systems; simulated business data remains fictitious and labelled.
 
-- `SKILL.md`: what Claude follows.  Start here.
-- `assets/`: the prototype kit, starter and outlines, checker, packer, `film_ready.py`, `cleanup.py`
-- `film/`: the film pipeline (scripts, templates, shared pronunciation list, worked example)
-- `references/`: the detailed guides
-- `tests/`: `python -m unittest discover -s tests -v` (needs Playwright and Chromium or Edge)
+## Install and set up
 
-## What's new in the merged skill
+Install this folder as `prototype-film`, or ZIP its contents with `SKILL.md` at the archive root for Claude Cowork.
+There is no automatic installation hook: invoke brand setup after installing, or let first use start onboarding.
+See [brand setup](references/brand-setup.md) for the approved intake manifest.
 
-- **Storyboard questions** grouped by design-thinking stage (Empathize, Define, Ideate, Prototype, Test, plus
-  format), with defaults filled in and a **must show** question.
-- **Prototypes built to pace the film**: a `data-note` on every stop, streamed text that fits its line, a hold on
-  the signature moment; `film_ready.py` checks it and drafts the narration.
-- **Narration-led timing**: `@ scene beat` stage directions in `narration.txt`; `autoplan.py` times every step from
-  the voiced lines, and the recorder drives the prototype in the engine's `?driven` mode.
-- **Offline, consistent voice**: Kokoro-82M, line by line, with a saved voice profile, number normalising, a
-  three-level pronunciation list and an optional speech-to-text listening check.
-- **Clean-up** at the end: keeps the `.html` and the latest `.mp4`, zips the sources, deletes the rest (after
-  asking).
+```text
+python <skill>/assets/brand_setup.py setup --workspace <workspace> --intake <intake.json> --approve
+python <skill>/assets/brand_setup.py validate --workspace <workspace>
+python <skill>/assets/init_prototype.py --workspace <workspace> --name <concept>
+```
 
-## Installing in Claude Cowork
+Pass approval only after reviewing identity, source materials and asset permissions.
+For a later change, repeat setup with `--update`; existing output snapshots remain reproducible.
+`.prototype-film/` is private workspace state and is ignored by Git. Do not store credentials there.
+Generated `working/` concepts are ignored too because their snapshots can contain approved private materials.
+Share or version them only deliberately after reviewing their contents and permissions.
+Different workspaces have independent brands; skill updates never overwrite them.
 
-Zip this folder (with `SKILL.md` at the top of the zip) and add it as a skill.  First film on a workspace: the skill
-downloads the Kokoro voice model (~350 MB) into `<workspace>/.tredence/kokoro/`.
+## Workflow
 
-Voice: Kokoro-82M (Apache-2.0) via `kokoro-onnx`.  Fonts: Poppins (SIL OFL).
+- One prefilled concept confirmation, separate from branding: business shift, work owner, signature moment,
+  human decisions, assumption to test and interface choice.
+- Story-specific scenes and optional small-team/whole-outcome narratives; accurate product shells remain distinct
+  from presenting-brand frames.
+- Prototype checks, offline packing and film readiness; narration comes from scene notes.
+- Saved offline Kokoro voice, or optional Azure `en-GB-OliviaNeural` (FTG preset) with explicit cloud consent.
+  Kokoro cannot reproduce Olivia. Credentials come from the authorized environment, not files.
+- Measured pacing: about 166 spoken words/minute and at most 160 over the complete film, with readable screens.
+- Frame-clock recording where supported, explicit compatibility mode, and short previews before full rendering.
+- Frame-clock captures support static assets/timers/Web Animations, not media decoding or animated image formats.
+- Line-specific narration edits, captions, original music, contact-sheet review and approval-gated cleanup.
+
+Start with [SKILL.md](SKILL.md). Detailed guides live in [references](references).
+Pipeline commands are in [film/scripts/README.md](film/scripts/README.md).
+
+## Validation
+
+```text
+python -m unittest discover -s tests -v
+```
+
+Browser integration tests require Python Playwright and Chromium/Edge. Film rendering also requires numpy,
+scipy, Pillow and ffmpeg with libx264/aac/libass. Voice tests using a real engine need Kokoro models or an
+authorized Azure service; unit tests do not make cloud requests. Run checks before marking a phase complete.
+Do not claim voice listening, visual acceptance or service availability based only on unit tests.
+The two-brand end-to-end test renders actual captioned 1080p MP4s with synthetic local test audio; this verifies
+pipeline synchronization and encoding, not the quality or availability of a real voice service.
+
+## Existing Tredence installations
+
+Use `brand_setup.py import-tredence --output <review-folder>` to create a reviewable intake from bundled legacy
+assets. Confirm permissions, set `asset_permissions` to true, and approve setup into the workspace.
+Legacy examples are explicit historical fixtures, not templates for other brands.
+Existing `.tredence`, `TREDENCE_HOME` and film configuration remain compatibility inputs for runtime models and
+voice profiles; see [voice migration](references/voice.md). Do not delete/redownload models just to rename state.
+
+The skill is now `prototype-film`. Rename the GitHub repository only after migration and validation; until then,
+the repository remains [willieahlers1-prototype-film-tredence](https://github.com/willieahlers1/willieahlers1-prototype-film-tredence).
+After renaming, update local remote URLs, installation links and integrations explicitly.
+
+Voice: Kokoro-82M (Apache-2.0) via kokoro-onnx; optional Azure service. Legacy Poppins fonts: SIL OFL.
+User-supplied assets/fonts must have approved use and embedding permissions.

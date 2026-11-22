@@ -1,21 +1,22 @@
-/* prototype-tredence kit styles: Fluent 2 product shells + Tredence 2026 frame.
+/* Prototype kit styles: Fluent 2 product shells + branded frame.
    Shipped as JS because Copilot Cowork skills can't contain .css files.  Load it in <head>:
    <script src="kit/proto-style.js"></script>.  Don't edit per prototype; use a <style> block in prototype.html. */
 (function () {
+  var brand = window.PROTOTYPE_BRAND;
+  if (!brand || brand.schema_version !== 1 || brand.approved !== true || brand.asset_permissions !== true ||
+      typeof brand.name !== "string" || !brand.name.trim() || !brand.palette ||
+      !["accent", "background", "foreground", "muted"].every(function (key) { return /^#[0-9a-f]{6}$/i.test(brand.palette[key] || ""); }) ||
+      !brand.typography || typeof brand.typography.family !== "string" || !brand.typography.family.trim() ||
+      !Array.isArray(brand.typography.files) || typeof brand.typography.system_font !== "boolean" ||
+      typeof brand.text_only !== "boolean" || (!brand.text_only && !(brand.logos && brand.logos.primary)))
+    throw new Error("Missing or invalid PROTOTYPE_BRAND: load an approved brand.js before kit/proto-style.js");
   var s = document.createElement("style"); s.id = "proto-style";
-  s.textContent = String.raw`/* prototype-tredence kit: Fluent 2 product shells + Tredence 2026 frame.
+  s.textContent = String.raw`/* Prototype kit: Fluent 2 product shells + branded frame.
    Stage is 1920 x 1080 CSS px, scaled to fit the window by proto.js.  Don't edit this file per prototype;
    put prototype-specific styles in a <style> block in prototype.html. */
 
 @font-face{font-family:"Segoe Sans Display";src:local("Segoe Sans Display");font-weight:400}
 @font-face{font-family:"Segoe Sans Display Semibold";src:local("Segoe Sans Display Semibold");font-weight:400}
-
-/* Poppins, the only Tredence typeface, ships in kit/fonts (SIL OFL) and is inlined by pack_prototype.py */
-@font-face{font-family:"Poppins";src:local("Poppins Regular"),local("Poppins-Regular"),url(kit/fonts/Poppins-Regular.ttf) format("truetype");font-weight:400;font-display:block}
-@font-face{font-family:"Poppins";src:local("Poppins Medium"),local("Poppins-Medium"),url(kit/fonts/Poppins-Medium.ttf) format("truetype");font-weight:500;font-display:block}
-@font-face{font-family:"Poppins";src:local("Poppins SemiBold"),local("Poppins-SemiBold"),url(kit/fonts/Poppins-SemiBold.ttf) format("truetype");font-weight:600;font-display:block}
-@font-face{font-family:"Poppins";src:local("Poppins Bold"),local("Poppins-Bold"),url(kit/fonts/Poppins-Bold.ttf) format("truetype");font-weight:700;font-display:block}
-@font-face{font-family:"Poppins";src:local("Poppins ExtraBold"),local("Poppins-ExtraBold"),url(kit/fonts/Poppins-ExtraBold.ttf) format("truetype");font-weight:800;font-display:block}
 
 :root{
   /* Fluent 2 web light tokens */
@@ -41,15 +42,11 @@
      for comparison values and a dark grey for limit lines (references/look-and-feel.md, "Data colours"). */
   --office-1:#156082;--office-2:#e97132;--office-3:#196b24;--office-4:#0f9ed5;--office-5:#a02b93;--office-6:#4ea72e;
   --data-muted:#d9d9d9;--data-ref:#595959;
-  /* Copilot's agent gradient: product scenes only. The Tredence frame is flat colour. */
+  /* Copilot's agent gradient: product scenes only. The brand frame is flat colour. */
   --cp-grad:linear-gradient(135deg,#38b9b6 0%,#1d90b2 45%,#8661c5 100%);
   --f-teal:#38b9b6;--f-deep:#28647c;--f-purple:#8661c5;--f-blue:#1d90b2;
   --f-display:"Segoe Sans Display","Segoe UI Variable Display","Segoe UI",system-ui,sans-serif;
   --f-semi:"Segoe Sans Display Semibold","Segoe UI Variable Display Semibold","Segoe UI Variable Display","Segoe UI",system-ui,sans-serif;
-  /* Tredence 2026 palette (closed: nine colours plus two background tints) and type */
-  --td-font:"Poppins",sans-serif;
-  --td-orange:#fe5000;--td-teal:#6dcdb8;--td-green:#004e42;--td-deep-orange:#8a1f04;--td-hi-orange:#f48120;
-  --td-charcoal:#404041;--td-grey:#929497;--td-off-white:#e6e7e8;--td-orange-tint:#ffede5;--td-teal-tint:#e2f5f1;
   /* Motion.  --ease-out (Fluent decelerate) for things appearing; --ease-glide (soft start, long settle) for things
      moving across the screen, so a long move never lurches.  proto.js reads these too; a prototype can retune them
      in its own :root. */
@@ -112,7 +109,7 @@ button{font:inherit;color:inherit;border:0;background:none;padding:0;cursor:poin
 .concept{position:absolute;left:12px;bottom:12px;z-index:900;display:flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;
   background:rgba(36,36,36,.78);color:#fff;font-size:12px;line-height:16px;font-weight:600;letter-spacing:.2px;pointer-events:none}
 .concept svg{width:14px;height:14px;fill:#fff}
-/* On Tredence frame scenes the label sits in the footer, between the copyright line and the scene number */
+/* On brand frame scenes the label sits in the footer. */
 .scene-frame-on .concept{left:500px;bottom:13px;background:rgba(64,64,65,.92);font-family:var(--td-font);font-weight:500}
 /* "Next" pill: added by proto.js when the demo waits for the presenter and nothing is cued.  Big enough to find at a
    glance from across a room; the arrow nudges gently so the eye goes to it. */
@@ -1010,76 +1007,62 @@ table.grid.compact td{height:36px;padding:0 8px;font-size:13px}
 .oi .ic{width:14px;height:14px}
 .chip .oi,.ref .oi{width:18px;height:18px}
 
-/* ---------- Tredence frame (cover, content, section, divider, ask, closing) ----------
-   The Tredence 2026 PowerPoint template at half size: 1920 x 1080 here = 3840 x 2160 in pptx-tredence, so every
-   template coordinate is divided by 2.  The chrome (top rule, brand squares, footer, T, cover band, wordmark, client
-   tag, section banner, closing photo) is drawn by ::before and by the script at the end of this file.  Never draw it
-   yourself and never put content over it.  Position frame content absolutely (.td-abs or inline left/top/width). */
-.frame{background:#fff;color:#000;font-family:var(--td-font);font-weight:400}
+/* Branded frame. The td-* names are retained as compatibility aliases. */
+.frame{background:var(--brand-background);color:var(--brand-foreground);font-family:var(--td-font);font-weight:400}
 .frame::before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background-repeat:no-repeat}
 .frame > *{z-index:2}
 .frame > .td-photo,.frame > .td-shade{z-index:0}
-.frame.td-content::before{
-  background-image:url(kit/brand/t-orange.svg),url(kit/brand/chrome/top-rule.svg),linear-gradient(#fe5000,#fe5000),linear-gradient(#6dcdb8,#6dcdb8),linear-gradient(#004e42,#004e42),linear-gradient(#fe5000,#fe5000),linear-gradient(#fe5000,#fe5000),linear-gradient(#d9d9d9,#d9d9d9);
-  background-position:1848px 1037px,-67px 0,1814px 20px,1848px 20px,1882px 20px,930px 1046.5px,979.5px 1046.5px,0 1022.5px;
-  background-size:28.5px 30px,1852px 9px,22px 22px,22px 22px,22px 22px,11px 4.5px,11px 4.5px,1920px 1px}
-.frame.td-cover::before{
-  background-image:url(kit/brand/wordmark-white.svg),url(kit/brand/chrome/cover-tag-arrow.svg),url(kit/brand/chrome/cover-tag.svg),url(kit/brand/chrome/cover-band.svg),url(kit/brand/t-orange.svg),linear-gradient(#fe5000,#fe5000),linear-gradient(#fe5000,#fe5000),linear-gradient(#d9d9d9,#d9d9d9);
-  background-position:64.5px 82px,350px 208.5px,64.5px 213px,0 775px,1848px 1037px,930px 1046.5px,979.5px 1046.5px,0 1022.5px;
-  background-size:263.5px 29px,49px 49px,363px 38.5px,1920px 248px,28.5px 30px,11px 4.5px,11px 4.5px,1920px 1px}
-.frame.td-section::before{
-  background-image:url(kit/brand/t-orange.svg),url(kit/brand/chrome/section-banner.svg),linear-gradient(#fe5000,#fe5000),linear-gradient(#fe5000,#fe5000),linear-gradient(#d9d9d9,#d9d9d9);
-  background-position:1848px 1037px,0 0,930px 1046.5px,979.5px 1046.5px,0 1022.5px;
-  background-size:28.5px 30px,1466.5px 1023px,11px 4.5px,11px 4.5px,1920px 1px}
-.frame.td-divider{background:#fe5000;color:#fff}
-.frame.td-ask{background:#404041;color:#fff}
-.frame.td-closing::before{
-  background-image:url(kit/brand/chrome/cover-band.svg),url(kit/brand/chrome/closing-photo.jpg);
-  background-position:0 832px,0 0;background-size:1920px 248px,1920px 1080px}
+.frame.td-content::before,.frame.td-section::before{border-top:9px solid var(--td-orange)}
+.frame.td-cover::before{top:775px;background:var(--td-orange)}
+.frame.td-divider{background:var(--td-orange);color:var(--brand-background)}
+.frame.td-ask{background:var(--brand-foreground);color:var(--brand-background)}
+.frame.td-closing{background:var(--td-orange);color:var(--brand-background)}
+.td-ch-logo{position:absolute;left:64px;top:82px;width:264px;height:60px;object-fit:contain;object-position:left center;z-index:2}
+.td-ch-name{left:64px;top:82px;font-size:32px;font-weight:700;color:var(--brand-background)}
 /* Chrome text, added to frame scenes by the script at the end of this file (aria-hidden, not part of the story) */
 .td-ch{position:absolute;z-index:1;margin:0;white-space:nowrap;pointer-events:none;line-height:1.2;font-family:var(--td-font)}
-.td-ch-copy{left:0;top:1042.5px;width:475.5px;text-align:right;font-size:18px;color:#7f7f7f}
-.td-ch-num{left:930px;top:1040px;width:60px;text-align:center;font-size:20px;color:#898989}
-.td-ch-tag{left:1536.5px;top:791.5px;width:325.5px;text-align:center;font-size:32px;font-weight:800;color:#fff}
-.td-ch-hash{left:32.5px;top:81.5px;font-size:48px;font-weight:700;line-height:1.26;color:#fff}
-.td-ch-close{left:112.5px;top:474.5px;width:1695.5px;text-align:center;font-size:108px;font-weight:700;line-height:1.4;color:#fff}
+.td-ch-copy{left:50px;top:1042px;font-size:18px;color:var(--td-grey)}
+.td-ch-num{left:930px;top:1040px;width:60px;text-align:center;font-size:20px;color:var(--td-grey)}
+.td-ch-tag{left:1200px;top:810px;width:650px;text-align:right;font-size:32px;font-weight:700;color:var(--brand-background)}
+.td-ch-hash{left:50px;top:50px;font-size:32px;font-weight:700;color:var(--brand-foreground)}
+.td-ch-close{left:112.5px;top:474.5px;width:1695.5px;text-align:center;font-size:108px;font-weight:700;line-height:1.4;color:var(--brand-background)}
 /* Photos: cover = above the band; ask = full bleed.  .td-shade is the Charcoal fade that keeps white text readable
    (--a0 left alpha, --a1 right alpha).  The only gradient the frame allows. */
 .td-photo,.td-shade{position:absolute;left:0;top:0;width:1920px;height:1080px}
 .td-cover > .td-photo,.td-cover > .td-shade{height:774.5px}
-.td-photo{background:#404041 center/cover no-repeat}
-.td-shade{background:linear-gradient(90deg,rgba(64,64,65,var(--a0,0)),rgba(64,64,65,var(--a1,var(--a0,0))))}
-/* Type (Poppins only; 1920-stage px = template px / 2) */
+.td-photo{background:var(--brand-foreground) center/cover no-repeat}
+.td-shade{background:linear-gradient(90deg,rgba(0,0,0,var(--a0,0)),rgba(0,0,0,var(--a1,var(--a0,0))))}
+/* Frame type */
 .td-abs{position:absolute;margin:0}
 .td-reg{font-weight:400}.td-med{font-weight:500}.td-semi{font-weight:600}.td-bold{font-weight:700}.td-xbold{font-weight:800}
 .td-kicker{font-size:24px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--td-orange);white-space:nowrap;line-height:1.2}
-.td-title{font-size:64px;font-weight:700;line-height:1.15;color:#000}
+.td-title{font-size:64px;font-weight:700;line-height:1.15;color:var(--brand-foreground)}
 .td-hl{color:var(--td-orange)}
 .td-lead{font-size:32px;line-height:1.35;color:var(--td-charcoal)}
-.td-cover-tag{font-size:20px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#fff;white-space:nowrap;line-height:34.5px}
-.td-cover-title{font-size:64px;font-weight:700;line-height:1.12;text-transform:uppercase;color:#fff}
-.td-cover-sub{font-size:36px;font-weight:600;line-height:1.3;color:#fff}
-.td-cname{font-size:36px;font-weight:700;line-height:1.15;color:#000}
+.td-cover-tag{font-size:20px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--brand-background);white-space:nowrap;line-height:34.5px}
+.td-cover-title{font-size:64px;font-weight:700;line-height:1.12;text-transform:uppercase;color:var(--brand-background)}
+.td-cover-sub{font-size:36px;font-weight:600;line-height:1.3;color:var(--brand-background)}
+.td-cname{font-size:36px;font-weight:700;line-height:1.15;color:var(--brand-foreground)}
 .td-cdesc{font-size:27px;line-height:1.4;color:var(--td-charcoal)}
 .td-callout{font-size:29px;font-weight:500;line-height:1.3;color:var(--td-charcoal)}
 .td-small{font-size:20px;line-height:1.35;color:var(--td-charcoal)}
 .td-label{font-size:18px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--td-deep-orange);white-space:nowrap;line-height:1.2}
 /* Surfaces: flat colour on white.  No gradients, glows, glass or shadows. */
-.td-card{position:absolute;box-sizing:border-box;background:#fff;border:1.5px solid var(--td-off-white);border-radius:12px}
+.td-card{position:absolute;box-sizing:border-box;background:var(--brand-background);border:1.5px solid var(--td-off-white);border-radius:12px}
 .td-panel{position:absolute;background:var(--td-off-white);border-radius:12px}
 .td-tint{position:absolute;background:var(--td-orange-tint)}
 .td-tint-teal{position:absolute;background:var(--td-teal-tint)}
 .td-accent{position:absolute;width:8px;background:var(--td-orange)}
-.td-num{position:absolute;display:grid;place-items:center;background:var(--td-orange);color:#fff;font-weight:700}
-.td-badge{position:absolute;display:grid;place-items:center;border-radius:50%;background:var(--td-orange);color:#fff;font-weight:700}
-.td-bar{position:absolute;display:flex;align-items:center;padding:0 20px;box-sizing:border-box;background:var(--td-orange);color:#fff;font-size:26px;font-weight:700;white-space:nowrap}
-.td-pillh{position:absolute;display:flex;align-items:center;justify-content:center;border-radius:50px;background:var(--td-orange);color:#fff;font-size:24px;font-weight:700;white-space:nowrap}
-.td-band{position:absolute;display:flex;align-items:center;padding:0 32px;box-sizing:border-box;background:var(--td-charcoal);border-radius:8px;color:#fff;font-size:24px;line-height:1.35}
+.td-num{position:absolute;display:grid;place-items:center;background:var(--td-orange);color:var(--brand-background);font-weight:700}
+.td-badge{position:absolute;display:grid;place-items:center;border-radius:50%;background:var(--td-orange);color:var(--brand-background);font-weight:700}
+.td-bar{position:absolute;display:flex;align-items:center;padding:0 20px;box-sizing:border-box;background:var(--td-orange);color:var(--brand-background);font-size:26px;font-weight:700;white-space:nowrap}
+.td-pillh{position:absolute;display:flex;align-items:center;justify-content:center;border-radius:50px;background:var(--td-orange);color:var(--brand-background);font-size:24px;font-weight:700;white-space:nowrap}
+.td-band{position:absolute;display:flex;align-items:center;padding:0 32px;box-sizing:border-box;background:var(--td-charcoal);border-radius:8px;color:var(--brand-background);font-size:24px;line-height:1.35}
 .td-rule{position:absolute;height:1.5px;background:var(--td-off-white)}
 .td-stat{font-weight:700;line-height:1.15;color:var(--td-orange);white-space:nowrap}
-.td-stat-label{font-size:22px;font-weight:700;line-height:1.3;color:#000}
-.td-cta{display:inline-flex;align-items:center;gap:16px;height:72px;padding:0 30px;box-sizing:border-box;border-radius:50px;background:var(--td-orange);color:#fff;font-size:30px;font-weight:600;white-space:nowrap}
-.td-cta .ic{fill:#fff;width:32px;height:32px}
+.td-stat-label{font-size:22px;font-weight:700;line-height:1.3;color:var(--brand-foreground)}
+.td-cta{display:inline-flex;align-items:center;gap:16px;height:72px;padding:0 30px;box-sizing:border-box;border-radius:50px;background:var(--td-orange);color:var(--brand-background);font-size:30px;font-weight:600;white-space:nowrap}
+.td-cta .ic{fill:currentColor;width:32px;height:32px}
 .td-bul{list-style:none;padding:0;margin:0}
 .td-bul li{position:relative;padding-left:20px}
 .td-bul li+li{margin-top:8px}
@@ -1133,19 +1116,27 @@ table.grid.compact td{height:36px;padding:0 8px;font-size:13px}
 `;
   document.head.appendChild(s);
 
-  // Tredence frame chrome text (the PPTX template's layouts carry the same text).  aria-hidden: not part of the story.
+  // Frame chrome is derived from the approved snapshot.
   function chrome() {
     var year = new Date().getFullYear();
     document.querySelectorAll(".scene").forEach(function (el, k) {
       var cls = el.classList;
       if (!cls.contains("frame") || el.querySelector(":scope > .td-ch")) return;
-      var add = function (c, txt) { var p = document.createElement("p"); p.className = "td-ch " + c; p.textContent = txt; p.setAttribute("aria-hidden", "true"); el.insertBefore(p, el.firstChild); };
-      if (cls.contains("td-closing")) { add("td-ch-close", "#beyondpossible"); return; }
+      var add = function (c, txt, meaningful) { var p = document.createElement("p"); p.className = "td-ch " + c; p.textContent = txt; if (!meaningful) p.setAttribute("aria-hidden", "true"); el.insertBefore(p, el.firstChild); };
+      if (cls.contains("td-closing")) { if (brand.signoff) add("td-ch-close", brand.signoff, true); return; }
       if (!cls.contains("td-content") && !cls.contains("td-cover") && !cls.contains("td-section")) return;
-      add("td-ch-copy", "\u00a9 COPYRIGHT " + year + ", TREDENCE. ALL RIGHTS RESERVED");
+      add("td-ch-copy", "\u00a9 " + year + " " + brand.name);
       add("td-ch-num", String(k + 1));
-      if (cls.contains("td-cover")) add("td-ch-tag", "#BeyondPossible");
-      if (cls.contains("td-section")) add("td-ch-hash", "#BeyondPossible");
+      if (cls.contains("td-cover")) {
+        if (brand.tagline) add("td-ch-tag", brand.tagline, true);
+        var logo = brand.logos && (brand.logos.light || brand.logos.primary);
+        if (!brand.text_only && logo) {
+          var img = document.createElement("img");
+          img.className = "td-ch-logo"; img.src = logo; img.alt = brand.name;
+          el.insertBefore(img, el.firstChild);
+        } else add("td-ch-name", brand.name, true);
+      }
+      if (cls.contains("td-section") && brand.tagline) add("td-ch-hash", brand.tagline, true);
     });
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", chrome); else chrome();

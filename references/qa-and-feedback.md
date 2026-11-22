@@ -12,12 +12,12 @@ Assume there are problems and go looking for them.  The first render is rarely r
 
 ## Review checklist (every screenshot)
 
-Read every word aloud in the Tredence voice (`tredence-frame.md` §Voice).
+Read every word aloud in the approved brand voice (`brand-frame.md` §Voice).
 
 Do this yourself, never with a subagent.  Look at each contact sheet (`renders/sheet-N.png`, 12 screenshots each,
 in order), then open single screenshots where something looks off.
 
-1. **Would a Tredence lead show it?**  Nothing generic, silly or overclaimed.  Read every word aloud as the presenter.
+1. **Would a presenter show it?**  Nothing generic, silly or overclaimed.  Read every word aloud as the presenter.
 2. **Looks like the real product?**  Chrome, spacing, type sizes, icon style and colours match the product.
    Employees meet the agent in the customer's custom agent app (its own name, never Microsoft Copilot); other apps
    appear where the work starts, as proof, or to show people reached.  The agent's work trace and the Workspace
@@ -30,8 +30,8 @@ in order), then open single screenshots where something looks off.
    follows.  Nothing approval-class is marked *Done for you*; any approval shows checks and the policy reason.
 6. **Sources shown** for anything the agent claims.
 7. **Nothing clipped, overlapping or empty-looking**; no stray placeholder text; the concept label is visible.
-   Frame scenes look like the Tredence template: chrome untouched, nothing over the footer, top rule, brand squares
-   or cover band, Poppins and flat brand colour only, the key phrase of each title in Bright Orange.
+   Frame scenes match the approved manifest: correct logo variants, typography and palette, nothing over the
+   footer/chrome, and readable contrast. No borrowed brand decorations or default photography.
 8. **Flow works**: every beat reveals in reading order; the cue ring lands on the thing to click, and clicking it
    does what it says; scenes end on an in-product bridge where the story has one (otherwise the Next pill shows);
    → always advances.
@@ -79,7 +79,7 @@ beat yourself with the checklist above.
 Export the scene and beat outline for a recording or automation tool with
 `python <skill>/assets/check_prototype.py <html> --outline [file.json]`.
 Still scenes are notes, not failures. Product checks also flag percent fractions, clipped agent highlights,
-highlights inside Word drafts and red/green traffic-light figures. Tredence frame checks remain unchanged.
+highlights inside Word drafts and red/green traffic-light figures. Brand frame checks use the selected manifest.
 
 ## Feedback playbook
 
@@ -99,12 +99,12 @@ Users often give one-line feedback.  Read the intent, fix the cause, and show th
 | "Jumpy", "not smooth" | Content snapping into place | Run `--motion`; reveal content where it stays, pair replaced elements with `data-morph`, give the warm-up a few seconds on the cover.  `engine.md` §Motion |
 | "I clicked and then it just stopped" | A cue fired one beat early, or nothing to click | Make the beats before the named thing automatic, or add an in-product bridge if the story has one.  `engine.md` §Clicks |
 | "Make it ours" | Not specific enough | Put the customer's industry, roles and real-world artefacts (fictional) into the data sheet, and rebuild the signature moment around their problem |
-| "Can it do X for real?" | A question for the Tredence team | Note it in `brief.md`; don't make the prototype claim it |
+| "Can it do X for real?" | A question for the implementation team | Note it in `brief.md`; don't make the prototype claim it |
 | "How would it know how *we* do it?", "who controls what it does?" | The story doesn't show where the customer's own method lives or who owns it | If their method is the point, weave in their own skill in the agent app: one rule from it applied visibly, and the person who owns it.  `story-and-data.md` §The customer's own way of working |
 | "That's wrong", "take a step back" | You are patching symptoms | Stop.  Name the root cause in one line and offer 2–4 genuinely different directions with a recommendation |
-| "Doesn't look like Tredence" | The frame drifted, or product styling leaked into it | Use the `td-` layouts and classes from `frames.html`; Poppins and the palette only; the orange key phrase in titles; a brand photo on the cover.  Leave the Microsoft product scenes as they are |
-| "Doesn't look like Microsoft" | Tredence styling leaked into a product scene | Take Poppins, orange and logos out of the product scenes; use the kit's shells as they are |
-| "Sounds like a brochure" | Marketing words, slogans, no "we" or "you" | Rewrite every line out loud in the Tredence voice: their world first, what changes in someone's day, one ask |
+| "Doesn't look like the presenting brand" | The frame drifted, or product styling leaked into it | Check the saved snapshot, configured fonts, palette and approved images. Leave Microsoft product scenes as they are |
+| "Doesn't look like Microsoft" | Presenting-brand styling leaked into a product scene | Remove presenting-brand overrides from product shells; use accurate product typography and colors |
+| "Sounds like a brochure" | Marketing words, slogans, no "we" or "you" | Rewrite every line out loud in the approved brand voice: their world first, what changes in someone's day, one ask |
 
 ## Delivery note (keep it short)
 

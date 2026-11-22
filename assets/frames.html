@@ -3,25 +3,23 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Tredence frame parts, as outlines</title>
+<title>Brand frame parts, as outlines</title>
+<script src="brand.js"></script>
 <script src="kit/proto-style.js"></script>
+<link rel="stylesheet" href="brand.css">
 </head>
 <body data-concept="Concept demo · Fictitious data">
 <main class="stage">
 
-<!-- TREDENCE FRAME PARTS, AS OUTLINES.  The chrome of each layout is the Tredence 2026 template's, drawn by the kit;
+<!-- BRAND FRAME PARTS, AS OUTLINES. The chrome is drawn from the approved brand snapshot;
      every word and number is a double-bracket placeholder.  This is a parts bin, not a storyline: the order here
      means nothing, and most prototypes need only a cover and a close (plus a chapter break for longer demos).
      The product scenes are the proof; the frame carries the business shift and the ask.
-     Coordinates are the template's divided by 2 (1920 x 1080 here = 3840 x 2160 in pptx-tredence).
-     Rules: Poppins and the --td-* palette only, flat colour, everything positioned absolutely, text in its own
-     element over empty boxes, orange text and white-on-orange only at 24 px bold and up.
-     Details: references/tredence-frame.md. -->
+     Use the approved palette and font, with text positioned separately over its background. -->
 
-<!-- Cover ("Tredence 2026 1"): photo above the orange band, the customer tag, the shift as the title.
-     Wordmark, tag shape, band, #BeyondPossible and footer are chrome. -->
+<!-- Cover: customer tag and shift as the title. Logo, tagline and footer are generated chrome. -->
 <section class="scene frame td-cover" id="cover" data-title="Cover">
-  <div class="td-photo" style="background-image:url(kit/photos/aspiration-sunrise-summit.jpg);background-position:50% 40%"></div>
+  <div class="td-photo"></div>
   <div class="td-shade" style="--a0:.7;--a1:.2"></div>
   <p class="td-abs td-cover-tag" style="left:88.5px;top:215px">[[Customer]]</p>
   <h1 class="td-abs td-cover-title" style="left:64.5px;top:292px;width:1500px">[[The business change,]]<br>[[in their words]]</h1>
@@ -57,24 +55,24 @@
   <p class="td-abs td-kicker" style="left:50px;top:75px">[[How the business could work]]</p>
   <h2 class="td-abs td-title" style="left:50px;top:115px;width:1760px">[[The same team,]] <span class="td-hl">[[serving every customer]]</span></h2>
 
-  <div class="td-bar" style="left:500px;top:300px;width:670px;height:60px;background:#404041">Today</div>
+  <div class="td-bar" style="left:500px;top:300px;width:670px;height:60px;background:var(--brand-foreground)">Today</div>
   <div class="td-bar" style="left:1200px;top:300px;width:670px;height:60px">With agents</div>
 
-  <p class="td-abs td-cname" style="left:50px;top:400px;width:420px;font-size:28px;color:#fe5000">[[Who is served]]</p>
+  <p class="td-abs td-cname" style="left:50px;top:400px;width:420px;font-size:28px;color:var(--brand-accent)">[[Who is served]]</p>
   <div class="td-panel" style="left:500px;top:385px;width:670px;height:120px;border-radius:0"></div>
   <p class="td-abs td-callout" style="left:530px;top:385px;width:610px;height:120px;display:flex;align-items:center">[[Today, in one line]]</p>
   <div class="td-tint" style="left:1200px;top:385px;width:670px;height:120px" data-beat="1"></div>
   <p class="td-abs td-callout" style="left:1230px;top:385px;width:610px;height:120px;display:flex;align-items:center" data-beat="1">[[With agents, in one line]]</p>
-  <div class="td-rule" style="left:50px;top:520px;width:1820px;background:#fe5000"></div>
+  <div class="td-rule" style="left:50px;top:520px;width:1820px;background:var(--brand-accent)"></div>
 
-  <p class="td-abs td-cname" style="left:50px;top:550px;width:420px;font-size:28px;color:#fe5000">[[How often]]</p>
+  <p class="td-abs td-cname" style="left:50px;top:550px;width:420px;font-size:28px;color:var(--brand-accent)">[[How often]]</p>
   <div class="td-panel" style="left:500px;top:535px;width:670px;height:120px;border-radius:0"></div>
   <p class="td-abs td-callout" style="left:530px;top:535px;width:610px;height:120px;display:flex;align-items:center">[[Today, in one line]]</p>
   <div class="td-tint" style="left:1200px;top:535px;width:670px;height:120px" data-beat="2" data-auto="500"></div>
   <p class="td-abs td-callout" style="left:1230px;top:535px;width:610px;height:120px;display:flex;align-items:center" data-beat="2">[[With agents, in one line]]</p>
-  <div class="td-rule" style="left:50px;top:670px;width:1820px;background:#fe5000"></div>
+  <div class="td-rule" style="left:50px;top:670px;width:1820px;background:var(--brand-accent)"></div>
 
-  <p class="td-abs td-cname" style="left:50px;top:700px;width:420px;font-size:28px;color:#fe5000">[[How fast]]</p>
+  <p class="td-abs td-cname" style="left:50px;top:700px;width:420px;font-size:28px;color:var(--brand-accent)">[[How fast]]</p>
   <div class="td-panel" style="left:500px;top:685px;width:670px;height:120px;border-radius:0"></div>
   <p class="td-abs td-callout" style="left:530px;top:685px;width:610px;height:120px;display:flex;align-items:center">[[Today, in one line]]</p>
   <div class="td-tint" style="left:1200px;top:685px;width:670px;height:120px" data-beat="3" data-auto="500"></div>
@@ -113,7 +111,7 @@
   <aside class="notes">[[The first move, why it comes first, and the ask]]</aside>
 </section>
 
-<!-- Chapter break, light (#BeyondPossible "Tredence Section" layout): a badge, a big centred title, one lead line.
+<!-- Chapter break, light: a badge, a big centred title, one lead line.
      Use between acts in demos of about 10+ scenes.  Pick this or the solid divider; one style per prototype. -->
 <section class="scene frame td-section" id="chapter" data-title="Chapter">
   <div class="td-badge" style="left:920px;top:330px;width:80px;height:80px;font-size:40px">2</div>
@@ -122,28 +120,24 @@
   <aside class="notes">[[Where we are in the story, and what comes next]]</aside>
 </section>
 
-<!-- Chapter break, loud (solid Bright Orange divider with the white T).  Short demos with two or three acts. -->
+<!-- Chapter break, solid accent. Short demos with two or three acts. -->
 <section class="scene frame td-divider" id="divider" data-title="Part 2">
-  <p class="td-abs td-kicker" style="left:100px;top:395px;font-size:28px;color:#fff">[[Part 02]]</p>
-  <h2 class="td-abs td-title" style="left:100px;top:445px;width:1150px;font-size:80px;line-height:1.1;color:#fff">[[What this act shows]]</h2>
-  <img class="td-abs" src="kit/brand/t-white.png" alt="" style="left:1320px;top:290px;width:498px;height:500px">
+  <p class="td-abs td-kicker" style="left:100px;top:395px;font-size:28px;color:var(--brand-background)">[[Part 02]]</p>
+  <h2 class="td-abs td-title" style="left:100px;top:445px;width:1150px;font-size:80px;line-height:1.1;color:var(--brand-background)">[[What this act shows]]</h2>
   <aside class="notes">[[Where we are in the story]]</aside>
 </section>
 
-<!-- The ask on a photo ("Tredence Blank" layout): the one thing to remember, the ask as a pill, the wordmark with
-     Beyond Possible.  Use as the close when the from -> to has already been shown. -->
+<!-- The ask: the one thing to remember and the ask as a pill. -->
 <section class="scene frame td-ask" id="ask" data-title="The ask">
-  <div class="td-photo" style="background-image:url(kit/photos/explorer.jpg);background-position:50% 50%"></div>
+  <div class="td-photo"></div>
   <div class="td-shade" style="--a0:.45"></div>
-  <h2 class="td-abs td-title" style="left:160px;top:150px;width:1600px;text-align:center;color:#fff">[[The one thing they should remember.]]<br>[[Said simply.]]</h2>
+  <h2 class="td-abs td-title" style="left:160px;top:150px;width:1600px;text-align:center;color:var(--brand-background)">[[The one thing they should remember.]]<br>[[Said simply.]]</h2>
   <div class="td-abs" style="left:0;top:340px;width:1920px;display:flex;justify-content:center" data-beat="1"><span class="td-cta">[[Let's pick one place and start there]] <i class="ic" data-icon="arrow_right"></i></span></div>
-  <img class="td-abs" src="kit/brand/wordmark-white.svg" alt="Tredence" style="left:80px;top:750px;width:330px;height:36px">
-  <p class="td-abs td-semi" style="left:1340px;top:745px;width:500px;text-align:right;font-size:32px;line-height:1.2;color:#fff;white-space:nowrap">Beyond Possible</p>
-  <div class="td-abs" style="left:0;top:820px;width:1920px;height:2px;background:#fff"></div>
+  <div class="td-abs" style="left:0;top:820px;width:1920px;height:2px;background:var(--brand-background)"></div>
   <aside class="notes">[[The ask, and who needs to say yes]]</aside>
 </section>
 
-<!-- Sign-off ("Tredence Closing" layout): the mountain photo, #beyondpossible, the orange band.  Add nothing. -->
+<!-- Sign-off uses the approved signoff text. -->
 <section class="scene frame td-closing" id="closing" data-title="Thank you">
   <aside class="notes">[[Thank the room]]</aside>
 </section>

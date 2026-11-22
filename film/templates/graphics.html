@@ -1,9 +1,7 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><title>Concept film graphics</title>
 <!--
-  Tredence concept film graphics, 1920x1080. All text, images and data come from gfx-data.js (window.GFX + window.SIM),
-  which gfx_data.py writes from film.json and the simulation data. Nothing here is customer-specific; don't edit it
-  per film. Brand: Poppins only, the closed Tredence palette, flat colour (the Charcoal photo shade is the one
-  gradient), the official logos unrecoloured, key phrases in Bright Orange (*phrase* in a title).
+  Concept film graphics, 1920x1080. Text and simulation data come from gfx-data.js;
+  brand identity comes from the approved snapshot in brand.js and brand.css.
   ?seg=night    establishing shot (slow push-in + kicker and title), then, when the film has simulation data:
                 phase 1 baseline order (dots = simulated outcomes, Teal on time / Bright Orange late),
                 phase 2 "trying N orders" shuffle with the counter climbing into millions,
@@ -16,37 +14,33 @@
   ?seek=<s>     freeze at that time (for stills). window.start() plays from 0.
   A missing image falls back to flat palette colour. Keep the bottom ~190 px clear: captions are burned in there.
 -->
-<style>
-@font-face{font-family:Poppins;font-weight:400;src:url(fonts/Poppins-Regular.ttf)}
-@font-face{font-family:Poppins;font-weight:500;src:url(fonts/Poppins-Medium.ttf)}
-@font-face{font-family:Poppins;font-weight:600;src:url(fonts/Poppins-SemiBold.ttf)}
-@font-face{font-family:Poppins;font-weight:700;src:url(fonts/Poppins-Bold.ttf)}
-:root{--orange:#fe5000;--teal:#6dcdb8;--green:#004e42;--deep:#8a1f04;--hi:#f48120;--char:#404041;--grey:#929497;--off:#e6e7e8;--otint:#ffede5;--ttint:#e2f5f1}
+<link rel="stylesheet" href="brand.css"><style>
+:root{--orange:var(--brand-accent);--teal:var(--brand-accent);--green:var(--brand-foreground);--deep:var(--brand-foreground);--hi:var(--brand-accent);--char:var(--brand-background);--grey:var(--brand-muted);--off:var(--brand-foreground);--otint:var(--brand-background);--ttint:var(--brand-background)}
 html,body{margin:0;width:1920px;height:1080px;overflow:hidden;background:var(--char)}
 *{box-sizing:border-box}
-body{font-family:Poppins,sans-serif;color:#fff}
+body{font-family:var(--td-font);color:var(--brand-foreground)}
 .layer{position:absolute;inset:0;opacity:0;overflow:hidden}
 .kb{position:absolute;inset:-2%;background-size:cover;background-position:center;will-change:transform}
-.shade{position:absolute;inset:0;background:linear-gradient(90deg,rgba(64,64,65,var(--a0,.72)),rgba(64,64,65,var(--a1,.18)))}
+.shade{position:absolute;inset:0;background:var(--brand-background);opacity:.7}
 .kicker{font-size:24px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--orange);line-height:1.2}
 .title{font-size:72px;font-weight:700;line-height:1.12;margin-top:16px;max-width:1300px}
 .hl{color:var(--orange)}
 .night-text{position:absolute;left:96px;top:120px;padding-left:32px}
 .night-text::before{content:"";position:absolute;left:0;top:4px;bottom:6px;width:8px;background:var(--orange)}
-.chip{position:absolute;display:inline-flex;align-items:center;gap:12px;padding:12px 24px;border-radius:999px;background:#fff;color:var(--char);font-size:26px;font-weight:600;border:1px solid var(--off)}
+.chip{position:absolute;display:inline-flex;align-items:center;gap:12px;padding:12px 24px;border-radius:999px;background:var(--brand-background);color:var(--brand-foreground);font-size:26px;font-weight:600;border:1px solid var(--off)}
 .chip svg{width:28px;height:28px}
-.card{position:absolute;background:#fff;color:#000;border-radius:12px;border:1px solid var(--off);opacity:0;transform:translateY(16px)}
+.card{position:absolute;background:var(--brand-background);color:var(--brand-foreground);border-radius:12px;border:1px solid var(--off);opacity:0;transform:translateY(16px)}
 .card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:8px;background:var(--orange);border-radius:12px 0 0 12px}
 .lt{left:96px;bottom:210px;padding:22px 34px 22px 40px}
 .lt b{display:block;font-size:38px;font-weight:700;line-height:1.2}
-.lt span{display:block;font-size:22px;color:var(--char);margin-top:4px}
+.lt span{display:block;font-size:22px;color:var(--grey);margin-top:4px}
 .qcard{left:96px;top:190px;width:500px;padding:22px 30px 24px 40px}
 .qcard .k{font-size:18px;letter-spacing:1.5px;text-transform:uppercase;color:var(--deep);font-weight:700}
 .qcard .n{font-size:46px;font-weight:700;margin-top:6px;line-height:1.15}
-.qcard .s{font-size:20px;color:var(--char);margin-top:6px;line-height:1.4}
+.qcard .s{font-size:20px;color:var(--grey);margin-top:6px;line-height:1.4}
 #sim{position:absolute;inset:0;opacity:0;background:var(--char)}
 #sim .bg{position:absolute;inset:-3%;background-position:center;background-size:cover;filter:blur(14px) saturate(.6)}
-#sim .dim{position:absolute;inset:0;background:rgba(64,64,65,.93)}
+#sim .dim{position:absolute;inset:0;background:var(--brand-background);opacity:.93}
 #sim canvas{position:absolute;left:0;top:0}
 .hdr{position:absolute;left:80px;top:56px}
 .hdr .title{font-size:54px;margin-top:10px}
@@ -54,7 +48,7 @@ body{font-family:Poppins,sans-serif;color:#fff}
 .ctr b{display:block;font-size:72px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.2}
 .ctr span{font-size:22px;color:var(--off)}
 .phase{position:absolute;left:80px;top:196px;height:46px;padding:0 22px;border-radius:999px;display:flex;align-items:center;font-size:22px;font-weight:600}
-.stat{position:absolute;top:196px;height:46px;padding:0 18px;border-radius:12px;display:flex;align-items:center;gap:12px;font-size:20px;font-weight:500;color:var(--off);background:rgba(255,255,255,.06);border:1px solid rgba(230,231,232,.28)}
+.stat{position:absolute;top:196px;height:46px;padding:0 18px;border-radius:12px;display:flex;align-items:center;gap:12px;font-size:20px;font-weight:500;color:var(--off);background:var(--brand-background);border:1px solid var(--brand-muted)}
 .stat b{font-size:24px;font-weight:700;font-variant-numeric:tabular-nums}
 #endcard{background:var(--orange)}
 #endcard .k{position:absolute;left:100px;top:330px;font-size:28px;font-weight:700;letter-spacing:3px;text-transform:uppercase}
@@ -62,8 +56,8 @@ body{font-family:Poppins,sans-serif;color:#fff}
 #endcard .t-mark{position:absolute;left:1320px;top:240px;width:498px;height:500px}
 #endcard .wm{position:absolute;left:100px;top:742px;width:520px;height:auto}
 #endcard .ln{position:absolute;left:100px;top:672px;font-size:26px;font-weight:500}
-#endcard .hl{color:#fff}
-.concept{position:absolute;left:12px;bottom:12px;z-index:9;display:flex;align-items:center;gap:6px;padding:4px 12px;border-radius:999px;background:rgba(64,64,65,.92);color:#fff;font-size:14px;line-height:18px;font-weight:500}
+#endcard .hl{color:inherit}
+.concept{position:absolute;left:12px;bottom:12px;z-index:9;display:flex;align-items:center;gap:6px;padding:4px 12px;border-radius:999px;background:var(--brand-background);color:var(--brand-foreground);font-size:14px;line-height:18px;font-weight:500}
 </style></head><body>
 <div id="night" class="layer"><div class="kb"></div><div class="shade"></div>
   <div class="night-text"><div class="kicker" id="n_eb"></div><div class="title" id="n_ti"></div></div></div>
@@ -78,11 +72,11 @@ body{font-family:Poppins,sans-serif;color:#fff}
 <div id="m2" class="layer"><div class="kb"></div>
   <div class="card lt" id="lt"><b id="lt_n"></b><span id="lt_r"></span></div>
   <div class="card qcard" id="qc"><div class="k" id="q_k"></div><div class="n" id="q_n"></div><div class="s" id="q_s"></div></div></div>
-<div class="chip" id="clk" style="left:96px;top:96px;opacity:0"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="8" fill="none" stroke="#fe5000" stroke-width="1.8"/><path d="M10 5.5V10l3 2" fill="none" stroke="#fe5000" stroke-width="1.8" stroke-linecap="round"/></svg><span id="clkt"></span></div>
+<div class="chip" id="clk" style="left:96px;top:96px;opacity:0"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="8" fill="none" stroke="var(--brand-accent)" stroke-width="1.8"/><path d="M10 5.5V10l3 2" fill="none" stroke="var(--brand-accent)" stroke-width="1.8" stroke-linecap="round"/></svg><span id="clkt"></span></div>
 <div id="endcard" class="layer"><div class="k" id="e_k"></div><div class="t" id="e_t"></div><div class="ln" id="e_l"></div>
-  <img class="t-mark" src="brand/t-white.png" alt=""><img class="wm" src="brand/wordmark-tagline-white.svg" alt="Tredence Beyond Possible"></div>
+  <img class="wm" id="brand-logo" alt=""><div class="wm" id="brand-text"></div></div>
 <div class="concept" id="concept"></div>
-<script src="gfx-data.js"></script>
+<script src="brand.js"></script><script src="gfx-data.js"></script>
 <script>
 const G = window.GFX, SIM = window.SIM, S = G.sim || {}, AX = S.axis || {}, MO = G.morning, EC = G.endcard || {};
 const Q = new URLSearchParams(location.search);
@@ -90,14 +84,22 @@ const P = k => parseFloat(Q.get(k));
 const SEG = Q.get('seg') || 'night';
 const HAS_SIM = !!(SIM && G.sim);
 const $ = id => document.getElementById(id);
+const BRAND = window.PROTOTYPE_BRAND;
+if (!BRAND) throw new Error('Missing approved brand snapshot');
+const rgb = h => { h=h.replace('#',''); if(h.length===3) h=[...h].map(c=>c+c).join(''); return [0,2,4].map(i=>parseInt(h.slice(i,i+2),16)); };
+const accent = rgb(BRAND.palette.accent);
+const darkAccent = (accent[0]*299+accent[1]*587+accent[2]*114)/1000 < 150;
+const logo = BRAND.logos && (BRAND.logos[darkAccent?'light':'dark'] || BRAND.logos.primary);
+if (!BRAND.text_only && logo) { $('brand-logo').src=logo; $('brand-logo').alt=BRAND.name; }
+else { $('brand-logo').style.display='none'; $('brand-text').textContent=[BRAND.name,BRAND.signoff].filter(Boolean).join(' · '); }
 const clamp = (x,a,b)=>Math.max(a,Math.min(b,x));
 const ease = x => x<0?0:x>1?1:(x<.5?2*x*x:1-Math.pow(-2*x+2,2)/2);
 const lerp=(a,b,x)=>a+(b-a)*x;
-const C = {orange:'254,80,0', teal:'109,205,184', off:'230,231,232', char:'64,64,65'};
+const C = {orange:rgb(BRAND.palette.accent).join(','), teal:rgb(BRAND.palette.muted).join(','), off:rgb(BRAND.palette.foreground).join(','), char:rgb(BRAND.palette.background).join(',')};
 let T0 = null; window.start = () => { T0 = performance.now(); };
 // ---------- text and images from gfx-data.js ----------
 if (G.title) document.title = G.title;
-// "*key phrase*" in a title is drawn in Bright Orange, as on Tredence slides
+// "*key phrase*" in a title uses the brand accent.
 function rich(el, s){ el.textContent=''; String(s||'').split(/(\*[^*]+\*)/).forEach(p=>{ if(!p) return;
   if(p.startsWith('*')&&p.endsWith('*')){ const h=document.createElement('span'); h.className='hl'; h.textContent=p.slice(1,-1); el.appendChild(h); }
   else el.appendChild(document.createTextNode(p)); }); }
@@ -121,7 +123,7 @@ if (SEG==='endcard' && EC.line) $('concept').style.display='none';   // the end 
 (S.stats||[]).forEach((st,k)=>{ const d=document.createElement('div'); d.className='stat'; d.id='st'+(k+1); d.style.left=st.left+'px';
   const l=document.createElement('span'); l.textContent=st.label; const v=document.createElement('b'); v.id='v'+(k+1); v.textContent='–';
   d.append(l,v); $('sim').appendChild(d); });
-['400','500','600','700'].forEach(w=>document.fonts.load(`${w} 20px Poppins`));
+['400','500','600','700'].forEach(w=>document.fonts.load(`${w} 20px "${BRAND.typography.family}"`));
 // ---------- simulation layout ----------
 const cv=$('cv'), x=cv.getContext('2d');
 const L=80, PX0=600, PX1=1560, TZ0=1610, TZ1=1840, TOP=300, RH=40;
@@ -153,19 +155,19 @@ function drawSim(t){
   x.clearRect(0,0,1920,1080);
   const tA0=P('tA0'), tA1=P('tA1'), tH=P('tH'), tS=P('tS'), tI0=P('tI0'), tI1=P('tI1');
   const A1=AX.end, O0=AX.overflow[0], O1=AX.overflow[1];
-  x.font='600 17px Poppins'; x.fillStyle=`rgba(${C.off},.9)`; x.textAlign='center';
-  AX.ticks.forEach(([h,l])=>{ const X=xt(h); x.fillText(l,X,TOP-18); x.strokeStyle='rgba(255,255,255,.08)'; x.lineWidth=1; x.beginPath(); x.moveTo(X,TOP-6); x.lineTo(X,TOP+N*RH); x.stroke(); });
-  x.fillStyle='rgba(255,255,255,.05)'; x.fillRect(TZ0-14,TOP-6,TZ1-TZ0+28,N*RH+6);
+  x.font=`600 17px "${BRAND.typography.family}"`; x.fillStyle=`rgba(${C.off},.9)`; x.textAlign='center';
+  AX.ticks.forEach(([h,l])=>{ const X=xt(h); x.fillText(l,X,TOP-18); x.strokeStyle=`rgba(${C.off},.08)`; x.lineWidth=1; x.beginPath(); x.moveTo(X,TOP-6); x.lineTo(X,TOP+N*RH); x.stroke(); });
+  x.fillStyle=`rgba(${C.off},.05)`; x.fillRect(TZ0-14,TOP-6,TZ1-TZ0+28,N*RH+6);
   x.fillStyle=`rgba(${C.off},.9)`; x.fillText(AX.overflow_label,(TZ0+TZ1)/2,TOP-18);
-  (AX.bands||[]).forEach(([a,b])=>{ x.fillStyle='rgba(255,255,255,.04)'; x.fillRect(xt(a),TOP-6,xt(b)-xt(a),N*RH+6); });
+  (AX.bands||[]).forEach(([a,b])=>{ x.fillStyle=`rgba(${C.off},.04)`; x.fillRect(xt(a),TOP-6,xt(b)-xt(a),N*RH+6); });
   const showD = t>=tI0;
   for(let i=0;i<N;i++){
     const r=rows[i]; const y=TOP+slotAt(i,t)*RH+RH/2; const isLate=late4.has(i);
     if(isLate && t>=tH){ const a=clamp((t-tH)/0.4,0,1); x.fillStyle = showD ? `rgba(${C.teal},${.12*a})` : `rgba(${C.orange},${.13*a})`; x.fillRect(L-12,y-RH/2+3,TZ1-L+26,RH-6); }
-    x.textAlign='left'; x.fillStyle='#fff'; x.font='600 19px Poppins'; x.fillText(r.name,L,y-3);
-    x.fillStyle=`rgba(${C.off},.92)`; x.font='400 15px Poppins'; x.fillText(shortProd(r.product)+' · '+dlLabel(r.dl),L,y+16);
-    if(isLate && t>=tH){ const txt= showD?S.badge.ok:S.badge.late; x.font='600 15px Poppins'; const w=x.measureText(txt).width+20; const X=470; x.fillStyle= showD?`rgb(${C.teal})`:`rgb(${C.orange})`; roundRect(X,y-13,w,26,13); x.fill(); x.fillStyle='#000'; x.fillText(txt,X+10,y+6); }
-    if(r.dl<=O1){ const X=xt(r.dl); x.strokeStyle='rgba(255,255,255,.9)'; x.lineWidth=2; x.beginPath(); x.moveTo(X,y-15); x.lineTo(X,y+15); x.stroke(); x.fillStyle='#fff'; x.beginPath(); x.moveTo(X,y-15); x.lineTo(X+9,y-11); x.lineTo(X,y-7); x.fill(); }
+    x.textAlign='left'; x.fillStyle=`rgb(${C.off})`; x.font=`600 19px "${BRAND.typography.family}"`; x.fillText(r.name,L,y-3);
+    x.fillStyle=`rgba(${C.off},.92)`; x.font=`400 15px "${BRAND.typography.family}"`; x.fillText(shortProd(r.product)+' · '+dlLabel(r.dl),L,y+16);
+    if(isLate && t>=tH){ const txt= showD?S.badge.ok:S.badge.late; x.font=`600 15px "${BRAND.typography.family}"`; const w=x.measureText(txt).width+20; const X=470; x.fillStyle= showD?`rgb(${C.teal})`:`rgb(${C.orange})`; roundRect(X,y-13,w,26,13); x.fill(); x.fillStyle=`rgb(${C.char})`; x.fillText(txt,X+10,y+6); }
+    if(r.dl<=O1){ const X=xt(r.dl); x.strokeStyle=`rgba(${C.off},.9)`; x.lineWidth=2; x.beginPath(); x.moveTo(X,y-15); x.lineTo(X,y+15); x.stroke(); x.fillStyle=`rgb(${C.off})`; x.beginPath(); x.moveTo(X,y-15); x.lineTo(X+9,y-11); x.lineTo(X,y-7); x.fill(); }
     // dots: one per simulated day; A = baseline order, D = optimized order
     const series = showD ? r.D : r.A; const tt0 = showD?tI0:tA0, tt1 = showD?tI1:tA1;
     let fade=1; if(!showD && t>tS) fade=clamp(1-(t-tS)/0.6,0,1);
@@ -191,12 +193,12 @@ function frameNight(t){
   let c=0; if(t>=tA0) c = CB*clamp((t-tA0)/(tS-tA0),0,1); if(t>=tS) c = CB + (SIM.futures-CB)*ease(clamp((t-tS)/(tI1-tS),0,1));
   $('ctr').textContent=fmt(c);
   const ph=$('phase'), tI0=P('tI0'), tH=P('tH');
-  if(t<tS){ ph.textContent=S.phase.baseline; ph.style.background='rgba(255,255,255,.12)'; ph.style.color='#fff'; }
-  else if(t<tI0){ ph.textContent=S.phase.search; ph.style.background=`rgba(${C.teal},.2)`; ph.style.color='#fff'; }
-  else { ph.textContent=S.phase.optimized; ph.style.background=`rgb(${C.teal})`; ph.style.color='#000'; }
+  if(t<tS){ ph.textContent=S.phase.baseline; ph.style.background=`rgba(${C.off},.12)`; ph.style.color=`rgb(${C.off})`; }
+  else if(t<tI0){ ph.textContent=S.phase.search; ph.style.background=`rgba(${C.teal},.2)`; ph.style.color=`rgb(${C.off})`; }
+  else { ph.textContent=S.phase.optimized; ph.style.background=`rgb(${C.teal})`; ph.style.color=`rgb(${C.char})`; }
   const sv = t>=tI0+1.2, sa = t>=tH-0.2;
   S.stats.forEach((st,k)=>{ $('st'+(k+1)).style.opacity=(sa?1:0); const v=$('v'+(k+1));
-    v.textContent = sv ? st.after : st.before; v.style.color = sv ? `rgb(${C.teal})` : (st.before_color||'#fff'); });
+    v.textContent = sv ? st.after : st.before; v.style.color = sv ? `rgb(${C.teal})` : (st.before_color||`rgb(${C.off})`); });
 }
 function frameMorning(t){
   const tSw=P('tSw'), tLT=P('tLT'), tQ=P('tQ'), end=P('end');
@@ -214,7 +216,7 @@ function frameEnd(t){
   const a=clamp((t-tT)/0.5,0,1), b=clamp((t-tL)/0.5,0,1);
   ['e_k','e_t'].forEach(id=>{ const e=$(id); e.style.opacity=a; e.style.transform=`translateY(${14*(1-a)}px)`; });
   ['e_l'].forEach(id=>{ $(id).style.opacity=b; });
-  document.querySelector('#endcard .wm').style.opacity=b;
+  document.querySelectorAll('#endcard .wm').forEach(el=>el.style.opacity=b);
 }
 function loop(now){
   const seek = Q.get('seek');

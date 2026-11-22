@@ -4,27 +4,29 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>[[Customer]] · [[scenario]] (concept)</title>
+<script src="brand.js"></script>
 <script src="kit/proto-style.js"></script>
+<link rel="stylesheet" href="brand.css">
 <style>
 /* This prototype's own styles: views you design for this story, anything the kit doesn't have.
    Product scenes: build from the Fluent tokens (--bg1, --fg1, --brand, --sh4, radius 4/8 ...).
-   Tredence frame scenes: Poppins and the --td-* palette only, flat colour.  Never edit kit/. */
+   Frame scenes: use the approved brand palette and font. Never edit kit/. */
 </style>
 </head>
 <!-- data-concept is the always-on label.  Keep it honest: it must say concept and fictitious data. -->
 <body data-concept="Concept demo · Fictitious data">
 <main class="stage">
 
-<!-- STARTER: Tredence frame styles and wiring, not a plot or wording to reuse. Keep, change or delete
+<!-- STARTER: branded frame styles and wiring, not a plot or wording to reuse. Keep, change or delete
      these cover, close and optional sign-off examples; design everything between them for this customer.
      Replace every double-bracket placeholder. Product outlines: shells.html. Frame layouts: frames.html.
-     references/look-and-feel.md and references/tredence-frame.md keep the two looks apart. -->
+     Keep brand frames and product looks apart. -->
 
-<!-- 1. Cover (Tredence frame, "Tredence 2026 1" layout).  The change for the business, in the customer's words: the
+<!-- 1. Cover. The change for the business, in the customer's words: the
      tension they live with, or what becomes possible.  Not a product tagline or a list of what the demo shows.
-     The wordmark, client tag shape, orange band, #BeyondPossible and footer are chrome: don't draw them. -->
+     The brand logo, tagline and footer are generated from the approved snapshot. -->
 <section class="scene frame td-cover" id="cover" data-title="Cover">
-  <div class="td-photo" style="background-image:url(kit/photos/mountains.jpg);background-position:50% 30%"></div>
+  <div class="td-photo"></div>
   <div class="td-shade" style="--a0:.7;--a1:.2"></div>
   <p class="td-abs td-cover-tag" style="left:88.5px;top:215px">[[Customer]]</p>
   <h1 class="td-abs td-cover-title" style="left:64.5px;top:292px;width:1500px">[[The business change,]]<br>[[in their words]]</h1>
@@ -37,7 +39,7 @@
      browser proof, Teams, Outlook, Dynamics 365, Power BI or the customer's own app.
      Use class="scene zoom". The story chooses the screens and their order. -->
 
-<!-- Close (Tredence frame, content layout).  How the business could work (from -> to), what it could be worth
+<!-- Close (brand frame, content layout). How the business could work (from -> to), what it could be worth
      (rounded, labelled Illustrative, basis in the notes), and an ask only if the meeting needs one.  Never a recap of the scenes, a checklist
      against the brief, or a feature list.  Text sits in its own absolutely positioned element over empty boxes. -->
 <section class="scene frame td-content" id="close" data-title="Close">
@@ -63,7 +65,7 @@
   <aside class="notes">[[How the presenter closes: the shift, what it's worth and its basis, the ask]]</aside>
 </section>
 
-<!-- Sign-off (Tredence frame, closing layout).  Optional; it follows the ask, never replaces it.  Add nothing. -->
+<!-- Sign-off (brand frame, closing layout). Optional; it follows the ask, never replaces it. -->
 <section class="scene frame td-closing" id="closing" data-title="Thank you">
   <aside class="notes">[[Thank the room; repeat the one ask if they haven't answered it]]</aside>
 </section>

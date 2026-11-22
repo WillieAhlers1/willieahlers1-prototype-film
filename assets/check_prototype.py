@@ -20,13 +20,13 @@ from this file).  If neither runs, say so to the user: the screenshots and layou
 
 What it flags: script errors (for a packed file, also when played inside the sandbox OneDrive and SharePoint use
 to preview a shared file, on a full pass), network requests, text clipped or spilling out of its box, text smaller than 11 px,
-text on a Tredence frame photo without enough contrast (WCAG 4.5:1, or 3:1 for large text: 24 px, or 18.66 px bold),
-the concept label missing, placeholder or AI-tell wording (including the Tredence voice's banned words), emoji, and notes for still scenes.
+text on a frame photo without enough contrast (WCAG 4.5:1, or 3:1 for large text: 24 px, or 18.66 px bold),
+the concept label missing, placeholder or AI-tell wording, emoji, and notes for still scenes.
 In the agent app (.cpa): an agent reply without its message header (.cp-who) at the start of the chat or after the person's message,
 and the Microsoft Copilot logo or name used as the custom app's own identity.
-Tredence frame scenes (.scene.frame): a colour outside the Tredence palette, a tint used as a text colour, text not in
-Poppins, a gradient (other than .td-shade) or a shadow, Bright Orange or white-on-orange text under 24 px, white text
-on Teal or Highlight Orange, Grey text under 28 px, and "TREDENCE" written in capitals in running text.
+Brand frame scenes (.scene.frame): colors and font outside the approved brand, a gradient
+(other than .td-shade), a shadow, and text smaller than 18 px. Use --brand manifest.json
+to check against a specific approved manifest instead of the embedded configuration.
 On a full pass, any double-bracket placeholder left from the starter or shells.html, anywhere in the source.
 Power BI visuals: no title or number format, categories and values that don't line up, a "0%" format given fractions, a chart that drew nothing or
 shows NaN, and a chart in an agent answer that doesn't cite its Power BI source.
@@ -62,7 +62,7 @@ TELLS = [r"\blorem\b", r"\bipsum\b", r"\bacme\b", r"\bjohn doe\b", r"\bjane doe\
          r"\bnext[- ]gen\w*\b", r"\b(?:Microsoft|M) ?365 Copilot\b", r"\bharness\w*\b", r"\bjourney\b", r"\bin today's\b", r"\bmagic\w*\b", r"\b99\.9+%",
          r"\bwhat you(?: just)? saw\b", r"\b(?:all )?in one place\b", r"\bsingle pane of glass\b", r"\bone[- ]stop[- ]shop\b",
          r"\bflywheel\w*\b", r"\bunleash\w*\b", r"\butili[sz]\w+\b", r"\bideat\w+\b", r"\boperationali[sz]\w+\b",
-         r"\bbest[- ]in[- ]class\b", r"\bworld[- ]class\b", r"\bexcited to\b", r"\bTredence (?:Inc|Analytics)\b"]
+         r"\bbest[- ]in[- ]class\b", r"\bworld[- ]class\b", r"\bexcited to\b"]
 EMOJI = re.compile("[\U0001F300-\U0001FAFF\U00002600-\U000027BF\U0001F000-\U0001F2FF]")
 
 # Leftover [[placeholders]] from the starter or shells.html, read from the source (they can hide in attributes).
@@ -99,40 +99,42 @@ AUDIT = r"""() => {
   out.frame = scene.classList.contains('frame');
   out.findings = [];
   if (out.frame) {
-    // Tredence frame: the closed palette, Poppins only, flat colour, and the brand's contrast rules.
-    const PAL = {'fe5000': 'Bright Orange', '6dcdb8': 'Teal', '004e42': 'Deep Green', '8a1f04': 'Deep Orange',
-      'f48120': 'Highlight Orange', '404041': 'Charcoal', '929497': 'Grey', 'e6e7e8': 'Off White', 'ffffff': 'White', '000000': 'Black'};
-    const TINT = {'ffede5': 'Orange Tint', 'e2f5f1': 'Teal Tint'};
+    const brand = window.PROTOTYPE_CHECK_BRAND || window.PROTOTYPE_BRAND;
+    const embedded = window.PROTOTYPE_BRAND;
+    if (!brand || brand.schema_version !== 1 || brand.approved !== true || brand.asset_permissions !== true ||
+        !brand.palette || !brand.typography || !brand.typography.family ||
+        !['accent', 'background', 'foreground', 'muted'].every(k => /^#[0-9a-f]{6}$/i.test(brand.palette[k] || '')))
+      out.findings.push('missing or invalid approved brand configuration');
+    if (window.PROTOTYPE_CHECK_BRAND && embedded &&
+        (!embedded.palette || !embedded.typography || brand.name !== embedded.name || brand.summary !== embedded.summary || brand.text_only !== embedded.text_only ||
+         ['accent', 'background', 'foreground', 'muted'].some(k => brand.palette[k] !== embedded.palette[k]) ||
+         brand.typography.family !== embedded.typography.family || brand.typography.system_font !== embedded.typography.system_font ||
+         brand.tagline !== embedded.tagline || brand.signoff !== embedded.signoff))
+      out.findings.push('embedded brand does not match the selected manifest');
+    const PAL = new Set(Object.values(brand && brand.palette || {}).filter(c => typeof c === 'string').map(c => c.slice(1).toLowerCase()));
     const hex = c => { const m = (c || '').match(/[\d.]+/g); if (!m || (m[3] !== undefined && +m[3] === 0)) return null;
       return m.slice(0, 3).map(x => (+x).toString(16).padStart(2, '0')).join(''); };
-    const bgOf = el => { for (let e = el; e && e !== scene.parentElement; e = e.parentElement) { const h = hex(getComputedStyle(e).backgroundColor); if (h) return h; } return 'ffffff'; };
     const nm = el => (el.textContent || el.className || el.tagName).toString().trim().replace(/\s+/g, ' ').slice(0, 50);
     const seen = new Set(), flag = msg => { if (!seen.has(msg)) { seen.add(msg); out.findings.push(msg); } };
     scene.querySelectorAll('*').forEach(el => {
       if (el.closest('.notes') || el.closest('.td-ch') || !vis(el) || el.closest('svg') && el.tagName.toLowerCase() !== 'svg') return;
       const cs = getComputedStyle(el), own = Array.from(el.childNodes).some(n => n.nodeType === 3 && n.nodeValue.trim());
       const bg = hex(cs.backgroundColor), shade = el.classList.contains('td-shade');
-      if (bg && !PAL[bg] && !TINT[bg])
-        flag('frame colour outside the Tredence palette: background #' + bg + ' on ' + nm(el));
+      if (bg && !PAL.has(bg))
+        flag('frame colour outside the brand palette: background #' + bg + ' on ' + nm(el));
       ['Top', 'Right', 'Bottom', 'Left'].forEach(sd => {
         const b = hex(cs['border' + sd + 'Color']);
-        if (parseFloat(cs['border' + sd + 'Width']) > 0 && b && !PAL[b]) flag('frame colour outside the Tredence palette: border #' + b + ' on ' + nm(el));
+        if (parseFloat(cs['border' + sd + 'Width']) > 0 && b && !PAL.has(b)) flag('frame colour outside the brand palette: border #' + b + ' on ' + nm(el));
       });
-      if (/gradient/.test(cs.backgroundImage) && !shade) flag('gradient on a Tredence frame scene (flat colour only; .td-shade is the one exception): ' + nm(el));
-      if (cs.boxShadow && cs.boxShadow !== 'none') flag('shadow on a Tredence frame scene (flat colour only): ' + nm(el));
+      if (/gradient/.test(cs.backgroundImage) && !shade) flag('gradient on a frame scene (flat colour only; .td-shade is the one exception): ' + nm(el));
+      if (cs.boxShadow && cs.boxShadow !== 'none') flag('shadow on a frame scene (flat colour only): ' + nm(el));
       if (!own && el.tagName.toLowerCase() !== 'svg') return;
-      const fg = hex(cs.color), size = parseFloat(cs.fontSize), back = bgOf(el);
-      if (own && !/^\s*"?Poppins/i.test(cs.fontFamily)) flag('frame text not in Poppins: ' + nm(el));
-      if (fg && TINT[fg]) flag(TINT[fg] + ' is for backgrounds only, not text: ' + nm(el));
-      else if (fg && !PAL[fg]) flag('frame colour outside the Tredence palette: text #' + fg + ' on ' + nm(el));
+      const fg = hex(cs.color), size = parseFloat(cs.fontSize);
+      if (own && brand && brand.typography && cs.fontFamily.split(',')[0].trim().replace(/^["']|["']$/g, '').toLowerCase() !== brand.typography.family.toLowerCase())
+        flag('frame text not in brand font ' + brand.typography.family + ': ' + nm(el));
+      if (fg && !PAL.has(fg)) flag('frame colour outside the brand palette: text #' + fg + ' on ' + nm(el));
       if (!own) return;
       if (size < 18) flag('frame text under 18 px (the template floor): ' + nm(el));
-      if (fg === 'fe5000' && size < 24) flag('Bright Orange text under 24 px (too light to read; use Deep Orange or Black): ' + nm(el));
-      if (fg === 'ffffff' && back === 'fe5000' && size < 24) flag('white text on Bright Orange under 24 px: ' + nm(el));
-      if (fg === 'ffffff' && (back === '6dcdb8' || back === 'f48120')) flag('white text on ' + PAL[back] + ' (use Black): ' + nm(el));
-      if (fg === '929497' && size < 28) flag('Grey text under 28 px (use Charcoal): ' + nm(el));
-      if (/\bTREDENCE\b/.test(Array.from(el.childNodes).filter(n => n.nodeType === 3).map(n => n.nodeValue).join(' ')))
-        flag('write "Tredence", never "TREDENCE", in text (the capitals are the logo): ' + nm(el));
     });
   }
   if (scene.querySelector('.m365 .cp, .tm .cp, .lob .cp, .cp.pane, .mc'))
@@ -395,11 +397,22 @@ def motion_check(browser, src, only):
 
 def main():
     args = sys.argv[1:]
+    bi = args.index("--brand") if "--brand" in args else -1
+    if bi >= 0 and (bi + 1 >= len(args) or args[bi + 1].startswith("--")):
+        sys.exit("--brand requires an approved manifest path")
+    brand = None
+    if bi >= 0:
+        import json
+        from brand import load_brand, BrandError
+        try:
+            brand = load_brand(args[bi + 1])
+        except (BrandError, OSError, ValueError) as exc:
+            sys.exit(f"Invalid brand manifest: {exc}")
     only = args[args.index("--scene") + 1] if "--scene" in args and args.index("--scene") + 1 < len(args) else None
     oi = args.index("--outline") if "--outline" in args else -1
     outline_to = args[oi + 1] if oi >= 0 and oi + 1 < len(args) and args[oi + 1].lower().endswith(".json") else None
     files = [a for i, a in enumerate(args) if not a.startswith("--") and (i == 0 or args[i - 1] != "--scene")
-             and not (outline_to and i == oi + 1)]
+             and not (outline_to and i == oi + 1) and not (bi >= 0 and i == bi + 1)]
     if not files:
         sys.exit(__doc__)
     if sync_playwright is None:
@@ -457,6 +470,8 @@ def main():
         if browser is None:
             run_node("No browser for Python Playwright")
         page = browser.new_page(viewport={"width": 1920, "height": 1080})
+        if brand is not None:
+            page.add_init_script("window.PROTOTYPE_CHECK_BRAND = " + json.dumps(brand).replace("<", "\\u003c") + ";")
         errors, requests = [], []
         page.on("pageerror", lambda e: errors.append(str(e)))
         page.on("console", lambda m: errors.append(m.text) if m.type in ("error", "warning") else None)

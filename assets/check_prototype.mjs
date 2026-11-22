@@ -94,8 +94,23 @@ async function previewCheck(browser, src) {
 
 const args = process.argv.slice(2);
 const si = args.indexOf("--scene"), only = si >= 0 ? args[si + 1] : null, motionOnly = args.includes("--motion");
+const bi = args.indexOf("--brand");
+if (bi >= 0 && (!args[bi + 1] || args[bi + 1].startsWith("--"))) {
+  console.error("--brand requires an approved manifest path"); process.exit(2);
+}
+let selectedBrand = null;
+if (bi >= 0) {
+  try {
+    selectedBrand = JSON.parse(fs.readFileSync(args[bi + 1], "utf8"));
+    if (selectedBrand.approved !== true || selectedBrand.asset_permissions !== true || !selectedBrand.name ||
+        !selectedBrand.typography?.family || !selectedBrand.palette ||
+        !["accent", "background", "foreground", "muted"].every(k => /^#[0-9a-f]{6}$/i.test(selectedBrand.palette[k] || "")))
+      throw new Error("missing required approved brand fields");
+  } catch (e) { console.error(`Invalid brand manifest: ${e.message}`); process.exit(2); }
+}
 const oi = args.indexOf("--outline"), outlineTo = oi >= 0 && /\.json$/i.test(args[oi + 1] || "") ? args[oi + 1] : null;
-const file = args.find((a, i) => !a.startsWith("--") && !(si >= 0 && i === si + 1) && !(outlineTo && i === oi + 1));
+const file = args.find((a, i) => !a.startsWith("--") && !(si >= 0 && i === si + 1) &&
+  !(bi >= 0 && i === bi + 1) && !(outlineTo && i === oi + 1));
 if (!file) { console.log("Usage: node check_prototype.mjs <prototype.html> [--scene <id>] [--motion] [--outline [file.json]]"); process.exit(2); }
 
 const pw = loadPlaywright();
@@ -115,6 +130,7 @@ const src = path.resolve(file), out = path.join(path.dirname(src), "renders");
 if (oi >= 0) {
   // --outline: the machine-readable outline (scenes, beats, text, triggers, notes) for a tool that drives the demo.
   const page = await browser.newPage({ viewport: { width: 1920, height: 1080 } });
+  if (selectedBrand) await page.addInitScript(brand => { window.PROTOTYPE_CHECK_BRAND = brand; }, selectedBrand);
   await page.goto(pathToFileURL(src).href + "?driven");
   await page.waitForFunction("window.proto && window.proto.outline");
   const o = await page.evaluate("proto.outline()"), dest = path.resolve(outlineTo || path.join(path.dirname(src), "outline.json"));

@@ -11,7 +11,7 @@ Reads the outline through check_prototype.py --outline (Python or Node Playwrigh
   - no data-hold anywhere: give the signature moment room
   - the estimated film length against --target (default 3:00), counting each stop as its line or its streaming
 Writes film-draft.txt next to the HTML: "@ scene beat" stage directions with each data-note as a "Host:" line, in
-order.  The film steps start narration.txt from it (tighten every line in the Tredence voice first).
+order. The film steps start narration.txt from it (tighten every line in the approved brand voice first).
 Exit code 1 if anything would break the film (bad ids, an engine without driven mode); warnings exit 0.
 """
 import json
@@ -95,7 +95,7 @@ def main():
         pass
     dest = src.parent / "film-draft.txt"
     dest.write_text("# Narration draft from the prototype's data-note lines (film_ready.py). Tighten every line in the\n"
-                    "# Tredence voice (references/narration.md) before voicing. '@' lines are stage directions for autoplan.py.\n\n"
+                    "# Approved brand voice (references/narration.md) before voicing. '@' lines are stage directions for autoplan.py.\n\n"
                     + "\n".join(draft) + "\n", encoding="utf-8")
     print(f"Film readiness: {len(O['scenes'])} scenes, {sum(len(s['beats']) for s in O['scenes'])} stops, "
           f"estimated {fmt(est)} (target {fmt(target)})")

@@ -7,10 +7,10 @@ Two design languages, each with one job:
   Microsoft's AI stack (Copilot Studio or Azure AI Foundry, Microsoft Fabric, Power BI), so it's drawn in Fluent 2
   with the customer's own app name, never as Microsoft Copilot.  Teams, Outlook, Dynamics 365 and Power BI look
   exactly like the real ones.
-- **The Tredence 2026 frame** for the cover, an optional chapter break, a scene that names the tension or shows the
-  business from above, and the close.  This is where the story and the ask live.  → `tredence-frame.md`
+- **The approved brand frame** for the cover, an optional chapter break, a scene that names the tension or shows the
+  business from above, and the close.  This is where the story and the ask live.  → `brand-frame.md`
 
-The two never mix: no Poppins, Bright Orange or Tredence logos inside a product, and no Fluent chrome, agent
+The two never mix: no presenting-brand fonts, accents or logos inside a third-party product, and no Fluent chrome, agent
 gradient or product UI on a frame scene.
 
 All sizes are CSS px on the 1920 × 1080 stage.  Product scenes use `class="scene zoom"`, which lays the UI out at
@@ -21,8 +21,8 @@ what's true and note the change in `brief.md`.
 
 | Facts | Source | Last checked |
 |---|---|---|
-| The agent app is a custom-built app for the customer, not Microsoft Copilot: its own name, the agent's sparkle mark and name, Home with Chat and Agent modes, Agents and Activity tabs, Skills settings, a browser pane | Tredence decision; drawn with Fluent 2 | 2026-10-27 |
-| The agent UI: message header, work trace, answer and action cards, the Workspace drawer | Fluent 2 design system (web components and its AI patterns), never a copy of Microsoft Copilot or Copilot Cowork; Tredence decision | 2026-10-27 |
+| The agent app is a custom-built app for the customer, not Microsoft Copilot: its own name, the agent's sparkle mark and name, Home with Chat and Agent modes, Agents and Activity tabs, Skills settings, a browser pane | the presenting brand decision; drawn with Fluent 2 | 2026-10-27 |
+| The agent UI: message header, work trace, answer and action cards, the Workspace drawer | Fluent 2 design system (web components and its AI patterns), never a copy of Microsoft Copilot or Copilot Cowork; the presenting brand decision | 2026-10-27 |
 | Power BI visual defaults | Microsoft Learn: "Visual defaults in Power BI reports" | 2026-10-21 |
 
 ## Fluent 2 product scenes
@@ -345,16 +345,16 @@ Draw it in the kit's light theme, and never mix themes.  The sparkle in the mess
 uses the agent gradient; don't recolour it or swap in the Copilot logo.  Restyle these parts in a prototype's `<style>` only to fit
 its story, never towards Microsoft Copilot's or Copilot Cowork's look.
 
-## Tredence frame scenes
+## Brand frame scenes
 
-`class="scene frame td-cover|td-content|td-section|td-divider|td-ask|td-closing"`.  The kit draws the Tredence 2026
-template's chrome; you place Poppins text and flat Tredence-palette shapes absolutely on top.  Layouts, zones, the
-type scale, the palette, contrast, logos, photos and components: `tredence-frame.md`.  Outlines: `assets/frames.html`.
+`class="scene frame td-cover|td-content|td-section|td-divider|td-ask|td-closing"`. The kit draws configured brand
+chrome; you place approved typography and palette shapes absolutely on top. Layouts, zones, the
+type scale, the palette, contrast, logos, photos and components: `brand-frame.md`.  Outlines: `assets/frames.html`.
 
 **Readable on a photo.**  Only the cover title, its subtitle, the ask's one line and the ask pill sit on a photo,
-over the Charcoal `.td-shade`.  Everything else goes on a white content scene.  The check measures the contrast
+over the brand foreground `.td-shade`.  Everything else goes on a white content scene.  The check measures the contrast
 behind every line of text on a frame scene and flags anything under 4.5:1 (3:1 for text 24 px and up, or 18.66 px
-bold), and flags any colour, font, gradient or shadow that isn't Tredence's.
+bold), and flags any colour, font, gradient or shadow that isn't the presenting brand's.
 
 If the story uses a frame, keep it short and let it carry the business idea (`story-and-data.md` §Start with the business shift):
 
@@ -386,7 +386,7 @@ to be numbered cards.  The product scenes are the proof.
 | The customer's skill in every demo, or a skill that only shows up as a badge | Only when doing it *their* way is the point; then the work visibly follows one of its rules, and a named person owns it |
 | Thinking that narrates the steps ("Now I will read the file") | Reasoning with the story's names and numbers, the thing that doesn't add up, and what it will do next |
 | Everything centred and floating | Product grid alignment: left-aligned, edge-to-edge panes |
-| Inter/Poppins/system-rounded fonts | Segoe UI in product, Segoe Sans Display in the frame |
+| Arbitrary fonts copied across contexts | Accurate product typography in product shells, configured brand typography on frames |
 | Dark mode "AI dashboard" | Light theme product UI, as customers see it at work |
 | Every prototype in the same scene order, the agent moment always a chat answer, or the same parts every time (an approval, a proof scene, a leader's report) | Screens chosen for this story's beats, and only the parts this story needs; a view designed for the signature moment |
 | One person's task done faster, or the same business covering more, and nothing more | The business reimagined: what it can be now, visible in the story, with the measure that moves |

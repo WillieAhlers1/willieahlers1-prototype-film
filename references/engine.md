@@ -228,10 +228,10 @@ recording: open `?driven`, `await proto.ready`, read `proto.outline()`, then for
 - Icons: `<i class="ic" data-icon="mail"></i>` → inline Fluent SVG.  `class="ic grad"` fills it with the agent
   gradient.  Unknown names log a console warning, which the check reports.
 - Avatars: `<span class="avatar" data-name="Adele Vance"></span>` → initials and stable colour.
-- Concept label: added to every scene from `<body data-concept>`.  Required; the packer checks for it.  On Tredence
+- Concept label: added to every scene from `<body data-concept>`.  Required; the packer checks for it.  On the presenting brand
   frame scenes it moves into the footer, between the copyright line and the scene number.
 - Frame chrome: on `.scene.frame` scenes the kit adds the template's footer text (copyright with the current year,
-  the scene number) and the #BeyondPossible marks.  Don't write them yourself.
+  the scene number) and the configured tagline marks.  Don't write them yourself.
 
 ## Check and pack
 
@@ -247,9 +247,9 @@ Automatic beats (`data-auto`) play straight through, so a scene with seven beats
 gives two screenshots, `b1` and `b7`.  It writes `renders/NN-<scene>-b<beat>.png` (the beat the scene stopped on)
 plus `renders/sheet-N.png` contact sheets (12 screenshots each), and reports: script
 errors, network requests, clipped or off-stage text, text under 11 px, low contrast on frame backgrounds, a missing
-concept label, AI-tell wording (including the Tredence voice's banned words), emoji, and leftover `[[placeholders]]` from the starter or the outlines.  It exits
-non-zero when it finds something. Tredence frame checks retain the closed palette, Poppins, flat colour,
-contrast and naming rules in `tredence-frame.md`.  Still scenes (no beats, no click) are listed as notes, not findings: fine when
+concept label, AI-tell wording (including the approved brand voice's banned words), emoji, and leftover `[[placeholders]]` from the starter or the outlines.  It exits
+non-zero when it finds something. Brand frame checks use the manifest palette and typography, flat colour,
+contrast and naming rules in `brand-frame.md`.  Still scenes (no beats, no click) are listed as notes, not findings: fine when
 the stillness is the point.  `--scene <id>` rechecks one scene.  On a full pass of a packed file it also plays every beat inside a
 sandboxed frame like the one OneDrive and SharePoint use to preview a shared file (no origin, no URL changes,
 no storage, no pop-ups) and reports script errors that only happen there.  Without Python Playwright (or a browser for it) it hands over to
@@ -262,8 +262,8 @@ that snapped into place instead of gliding.  About 4 seconds a scene, so a full 
 use `--scene <id>` after an edit.  It can't judge pacing or taste, so watch the demo once at full screen too.
 
 `pack` inlines `kit/` CSS, JS, icons and images into `dist/<name>.html`, refuses external URLs, and requires the
-concept label.  The packed file is what the user presents and shares.  Poppins (`kit/fonts`, SIL Open Font
-License), the brand chrome and the photos a prototype uses are embedded, so the Tredence frame looks the same
+concept label and validated brand snapshot. The packed file is what the user presents and shares. Approved
+local fonts, brand chrome and selected photos are embedded, so the brand frame looks the same
 everywhere; a typical packed prototype is 2 to 4 MB.  Product scenes use the machine's Segoe UI, as the real
 products do.
 
@@ -271,6 +271,6 @@ products do.
 
 Run `python -m unittest discover -s tests -v` from the skill repository. The tests require Python Playwright,
 Pillow and Microsoft Edge, and create their prototypes in temporary folders. They cover engine 1.14.8,
-play/pause and mouse navigation, driven mode and outline export, work traces and Workspace counters, Tredence
-brand checks, offline packing and the shared-file preview sandbox. The Tredence adaptation also fixes
+play/pause and mouse navigation, driven mode and outline export, work traces and Workspace counters, the presenting brand
+brand checks, offline packing and the shared-file preview sandbox. The engine adaptation also fixes
 `proto.go(scene, true)` settling on a scene with no beats, including the optional branded sign-off.

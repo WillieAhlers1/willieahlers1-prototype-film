@@ -12,7 +12,7 @@ subagent and never from the code alone.
 - **No presenter chrome.**  No Back/Next buttons, Next pill, scene dots, focus rings or key help in any frame.
 - **Captions** don't cover the key UI of the moment (the answer, the approval button, the stat).  If they do, move
   the cue, shorten the line, or use the captions band below the picture.
-- **Tredence look** on every graphic and frame scene: Poppins, palette, key phrase in Bright Orange, concept label.
+- **the presenting brand look** on every graphic and frame scene: the configured font, palette, key phrase in brand accent, concept label.
 - **Numbers on screen** match the narration and the source.
 - **Pacing.**  Under 3:30; no stretch longer than ~8 s without narration except the opening and the sign-off.
 - **Audio levels** from `python mix.py --levels`: voice about -18 dB mean; music alone about -27 to -31 dB.
@@ -29,7 +29,7 @@ Fix, re-run only the affected steps (see the iteration levers in `film.md`), and
 | "The screen changes before / after the line" | `pacing.lead_s` (how long a line waits after its step), or move the `@ scene beat` line in `narration.txt` |
 | "It mispronounces X" | Add X to the film's `lexicon.json` (a `say` respelling, or `ipa` phonemes: `python speech.py` shows how lines are spoken); re-run `voice.py` (only lines with X re-voice).  Names you reuse go in `<home>/lexicon.json`.  `voice.py --listen` finds the rest |
 | "The voice sounds robotic / wrong" | A scratch (`say`, SAPI) voice was used: re-voice with Kokoro.  Otherwise `voice.py --audition`, pick another voice or `--speed 0.95`, `voice.py --use <voice>` |
-| "Doesn't look like Tredence" | Check the graphics stills against `look.md`; check the prototype's frame scenes with `check_prototype.py`.  Never restyle product scenes with Tredence colours |
+| "Doesn't look like the presenting brand" | Check the graphics stills against `look.md`; check the prototype's frame scenes with `check_prototype.py`.  Never restyle product scenes with presenting-brand colours |
 | "Looks like a product promo" | Rewrite lines that sell; say what the agent does and what the person decides; label impact illustrative |
 | "Is that number real?" | Show the line, the number and its source (data sheet line or engine total).  No source: remove it |
 | "Captions cover the screen" | Move the line, or captions band below the picture (`film.md` levers) |
@@ -49,4 +49,4 @@ working/<name>/film/source-v<N>/   film.json, narration.txt, lexicon.json, plan.
 ```
 
 Never overwrite an earlier version while iterating; the clean-up at the end keeps only the latest.  Don't email, post or share the film unless the user asks.  If the user also
-needs slides, offer a `pptx-tredence` deck from the same brief.
+needs slides, offer a `a separately installed deck skill` deck from the same brief.

@@ -61,9 +61,13 @@ Legacy examples are explicit historical fixtures, not templates for other brands
 Existing `.tredence`, `TREDENCE_HOME` and film configuration remain compatibility inputs for runtime models and
 voice profiles; see [voice migration](references/voice.md). Do not delete/redownload models just to rename state.
 
-The skill is now `prototype-film`. Rename the GitHub repository only after migration and validation; until then,
-the repository remains [willieahlers1-prototype-film-tredence](https://github.com/willieahlers1/willieahlers1-prototype-film-tredence).
-After renaming, update local remote URLs, installation links and integrations explicitly.
+The skill is `prototype-film`, hosted in
+[WillieAhlers1/willieahlers1-prototype-film](https://github.com/WillieAhlers1/willieahlers1-prototype-film).
+For existing clones, update the remote explicitly rather than relying on redirects:
+
+```text
+git remote set-url origin https://github.com/WillieAhlers1/willieahlers1-prototype-film.git
+```
 
 Voice: Kokoro-82M (Apache-2.0) via kokoro-onnx; optional Azure service. Legacy Poppins fonts: SIL OFL.
 User-supplied assets/fonts must have approved use and embedding permissions.

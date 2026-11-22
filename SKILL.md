@@ -199,5 +199,5 @@ runtime state, the workspace, skill, or any unrelated folder. Restore sources fo
 `film/` contains scripts, templates, generic lexicon and explicitly legacy examples.
 `references/` contains progressively loaded guides. `tests/` contains contract, browser and film regressions.
 Legacy Tredence assets are available only through an explicit reviewed import, never generic defaults.
-Install under a matching `prototype-film` folder or as a ZIP with this file at its root. The repository rename
-is separate and follows migration/validation; current source links remain valid until then.
+Install under a matching `prototype-film` folder or as a ZIP with this file at its root.
+Source: [WillieAhlers1/willieahlers1-prototype-film](https://github.com/WillieAhlers1/willieahlers1-prototype-film).

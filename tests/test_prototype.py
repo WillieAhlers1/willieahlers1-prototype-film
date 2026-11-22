@@ -1,4 +1,4 @@
-"""Regression checks for the shared engine and the Tredence brand overlay.
+"""Regression checks for the shared engine and generic brand overlay.
 
 Run: python -m unittest discover -s tests -v
 Requires Python Playwright, Pillow and an installed Edge or Chromium browser.
@@ -18,17 +18,35 @@ from playwright.sync_api import sync_playwright
 
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "assets"))
+from brand import install_brand
+
 CHECK = runpy.run_path(str(ROOT / "assets" / "check_prototype.py"))
 
 
 class PrototypeTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.temp = tempfile.TemporaryDirectory(prefix="prototype-film-tredence-test-")
+        cls.temp = tempfile.TemporaryDirectory(prefix=".prototype-test-", dir=ROOT)
         cls.addClassCleanup(cls.temp.cleanup)
         cls.work = Path(cls.temp.name) / "smoke"
         cls.work.mkdir()
-        shutil.copytree(ROOT / "assets" / "kit", cls.work / "kit")
+        shutil.copytree(ROOT / "assets" / "kit", cls.work / "kit",
+                        ignore=shutil.ignore_patterns("brand", "fonts", "photos"))
+        brand_dir = Path(cls.temp.name) / "manifest"
+        brand_dir.mkdir()
+        (brand_dir / "logo.svg").write_text('<svg xmlns="http://www.w3.org/2000/svg" width="100" height="30"><rect width="100" height="30" fill="#005a9c"/></svg>', encoding="utf-8")
+        cls.manifest = brand_dir / "brand.json"
+        cls.manifest.write_text(json.dumps({
+            "schema_version": 1, "approved": True, "asset_permissions": True,
+            "name": "Northstar", "summary": "A practical, clear identity.",
+            "palette": {"accent": "#005a9c", "background": "#ffffff", "foreground": "#111111", "muted": "#555555"},
+            "typography": {"family": "Arial", "files": [], "system_font": True},
+            "logos": {"primary": "logo.svg"}, "text_only": False,
+            "tagline": "Ideas into action", "signoff": "Thank you",
+            "materials": [], "images": [], "pronunciations": {"say": {}, "ipa": {}}
+        }), encoding="utf-8")
+        install_brand(cls.manifest, cls.work)
         starter = (ROOT / "assets" / "starter.html").read_text(encoding="utf-8")
         shells = (ROOT / "assets" / "shells.html").read_text(encoding="utf-8")
         scenes = []
@@ -90,6 +108,10 @@ class PrototypeTests(unittest.TestCase):
             with self.subTest(script=rel):
                 source = (ROOT / "assets" / rel).read_text(encoding="utf-8")
                 self.page.evaluate("(source) => { new Function(source); }", source)
+        node_source = (ROOT / "assets" / "check_prototype.mjs").read_text(encoding="utf-8")
+        node_source = re.sub(r"^import .*?;\s*$", "", node_source, flags=re.MULTILINE)
+        node_source = node_source.replace("import.meta.url", "undefined")
+        self.page.evaluate("(source) => { new (Object.getPrototypeOf(async function(){}).constructor)(source); }", node_source)
 
     def test_driven_outline_and_events(self):
         self.open()
@@ -109,14 +131,14 @@ class PrototypeTests(unittest.TestCase):
         self.assertEqual(self.page.locator(".proto-dots").evaluate("(e) => getComputedStyle(e).display"), "none")
         self.assertFalse(self.errors, self.errors)
 
-    def test_tredence_frame_and_microsoft_product_separation(self):
+    def test_brand_frame_and_microsoft_product_separation(self):
         self.open()
-        self.assertIn("Poppins", self.page.locator("#cover").evaluate("(e) => getComputedStyle(e).fontFamily"))
-        self.assertEqual(self.page.locator("#close .td-hl").evaluate("(e) => getComputedStyle(e).color"), "rgb(254, 80, 0)")
-        self.assertEqual(self.page.locator("#cover .td-ch-tag").inner_text(), "#BeyondPossible")
-        self.assertEqual(self.page.locator("#closing .td-ch-close").inner_text(), "#beyondpossible")
-        self.assertNotIn("Poppins", self.page.locator("#chat .cpa").evaluate("(e) => getComputedStyle(e).fontFamily"))
-        self.assertIn("kit/brand/", self.page.locator("#cover").evaluate("(e) => getComputedStyle(e, '::before').backgroundImage"))
+        self.assertIn("Arial", self.page.locator("#cover").evaluate("(e) => getComputedStyle(e).fontFamily"))
+        self.assertEqual(self.page.locator("#close .td-hl").evaluate("(e) => getComputedStyle(e).color"), "rgb(0, 90, 156)")
+        self.assertEqual(self.page.locator("#cover .td-ch-tag").inner_text(), "Ideas into action")
+        self.assertEqual(self.page.locator("#closing .td-ch-close").inner_text(), "Thank you")
+        self.assertNotIn("Arial", self.page.locator("#chat .cpa").evaluate("(e) => getComputedStyle(e).fontFamily"))
+        self.assertIn("brand/logo.svg", self.page.locator("#cover .td-ch-logo").get_attribute("src"))
         for scene in ("cover", "close", "closing"):
             self.page.evaluate("(id) => proto.go(id, true)", scene)
             findings = self.page.evaluate(CHECK["AUDIT"])["findings"]
@@ -203,10 +225,10 @@ class PrototypeTests(unittest.TestCase):
     def test_checker_preserves_brand_rules_and_adds_product_rules(self):
         self.open("?check")
         self.page.evaluate("() => proto.go('close', true)")
-        self.page.locator("#close .td-title").evaluate("(e) => { e.style.fontFamily = 'Arial'; e.style.color = '#123456'; }")
+        self.page.locator("#close .td-title").evaluate("(e) => { e.style.fontFamily = 'Georgia'; e.style.color = '#123456'; }")
         findings = self.page.evaluate(CHECK["AUDIT"])["findings"]
-        self.assertTrue(any("not in Poppins" in f for f in findings), findings)
-        self.assertTrue(any("outside the Tredence palette" in f for f in findings), findings)
+        self.assertTrue(any("not in brand font" in f for f in findings), findings)
+        self.assertTrue(any("outside the brand palette" in f for f in findings), findings)
         self.page.evaluate("() => proto.go('chat', true)")
         self.page.locator("#chat .cpa-chat").evaluate("""e => {
           e.insertAdjacentHTML('beforeend', `<figure class="pbi" data-chart="bar" data-fmt="0%" data-x="A,B" data-series="Actual:0.5,0.7"><div class="pbi-head"><b>Coverage</b></div></figure>
@@ -222,7 +244,8 @@ class PrototypeTests(unittest.TestCase):
         fixture = self.work / "playback.html"
         fixture.write_text(
             """<!doctype html><html lang="en"><head><meta charset="utf-8">
-            <script src="kit/proto-style.js"></script></head>
+            <script src="brand.js"></script><script src="kit/proto-style.js"></script>
+            <link rel="stylesheet" href="brand.css"></head>
             <body data-concept="Concept demo · Fictitious data"><main class="stage">
             <section class="scene zoom" id="playback" data-title="Playback" data-hold="2500">
               <p>Sample</p>
@@ -263,7 +286,7 @@ class PrototypeTests(unittest.TestCase):
         self.assertTrue(self.packed.exists())
         self.assertLess(self.packed.stat().st_size, 15 * 1024 * 1024)
         packed_text = self.packed.read_text(encoding="utf-8")
-        self.assertIn("data:font/ttf;base64,", packed_text)
+        self.assertIn("data:image/svg+xml;base64,", packed_text)
         self.assertNotIn('src="kit/', packed_text)
         self.open(path=self.packed)
         self.assertEqual(self.page.evaluate("proto.version"), "1.14.8")

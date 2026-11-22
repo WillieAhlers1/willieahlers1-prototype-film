@@ -1,10 +1,10 @@
-# Writes the burned-in captions (ASS): Poppins on a translucent Charcoal box, bottom centre, sitting just above
-# the Tredence frame footer. Each cue is split into chunks of at most ~72 characters at sentence ends (then
+# Writes burned-in ASS captions in the brand font and palette, bottom centre. Each cue is split
+# into chunks of at most ~72 characters at sentence ends (then
 # commas), and each chunk is timed by its share of the cue's characters. Usage: python subs.py
 import json
 import re
 
-from filmcfg import load
+from filmcfg import load, brand_data
 
 cfg = load(); CP = cfg["captions"]; MAXC = CP["max_chars"]
 plan = json.load(open(cfg["plan"], encoding="utf-8"))
@@ -43,7 +43,20 @@ def ts(t):
 
 
 W, H = cfg["capture"]["width"], cfg["capture"]["height"]
-# ASS colours are &HAABBGGRR (AA = transparency). White text; box Charcoal #404041 at about 80 % opacity.
+palette = brand_data().get("palette", {})
+
+
+def ass_color(value, alpha="00"):
+    value = value.lstrip("#")
+    if len(value) == 3:
+        value = "".join(c * 2 for c in value)
+    if not re.fullmatch(r"[0-9a-fA-F]{6}", value):
+        raise ValueError("caption colour must be a hex RGB colour")
+    return f"&H{alpha}{value[4:6]}{value[2:4]}{value[0:2]}".upper()
+
+
+fg = ass_color(palette.get("foreground", "#ffffff"))
+bg = ass_color(palette.get("background", "#000000"), "33")
 head = f"""[Script Info]
 ScriptType: v4.00+
 PlayResX: {W}
@@ -52,7 +65,7 @@ WrapStyle: 0
 
 [V4+ Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
-Style: Cap,{CP['font']},{CP['size']},&H00FFFFFF,&H00FFFFFF,&H33414040,&H33414040,0,0,0,0,100,100,0,0,3,14,0,2,{CP['margin_lr']},{CP['margin_lr']},{CP['margin_v']},1
+Style: Cap,{CP['font']},{CP['size']},{fg},{fg},{bg},{bg},0,0,0,0,100,100,0,0,3,14,0,2,{CP['margin_lr']},{CP['margin_lr']},{CP['margin_v']},1
 
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text

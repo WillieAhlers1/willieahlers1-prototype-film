@@ -2,7 +2,7 @@
 
 ## Start with the business shift
 
-Tredence's last-mile point of view still applies: show the everyday decision that changes, not only the
+the presenting brand's last-mile point of view still applies: show the everyday decision that changes, not only the
 insight or dashboard. The redesigned business is credible because someone can act differently.
 
 A prototype that only shows one person getting through a task faster is a productivity demo; one that shows the
@@ -108,7 +108,7 @@ for each beat the screen that shows it best (`look-and-feel.md` §What screens m
 | … | | | | | | |
 
 **Stage** is the design-thinking stage the beat serves (Empathize, Define, Ideate, Prototype, Test: SKILL.md
-§Storyboard questions); every stage should appear at least once, in roughly that order, though a scene can serve two.
+§One concept confirmation); use stages as a private coverage aid, not a required scene list or ordering.
 **Stop seconds** is how long the stop needs: the spoken line (characters ÷ 15) or its on-screen streaming, whichever
 is longer.  The total is the film's length, and a check on the live demo's (`film-pacing.md`).  Every "presenter
 says" line becomes that stop's `data-note`.  Every item on the brief's **must show** list appears in some row.
@@ -271,7 +271,7 @@ even when the story is about the customer's own situation.
 
 ## Words
 
-The Tredence customer voice applies to every word on screen and in the notes (`tredence-frame.md` §Voice): start
+The approved customer voice applies to every word on screen and in the notes (workspace brand summary): start
 in the customer's world, say what changes in someone's day, "we" and "you" together, confident but never
 promotional, no exclamation marks.
 
@@ -280,10 +280,10 @@ promotional, no exclamation marks.
 - Banned: unlock, unleash, seamless, leverage, utilise, supercharge, revolutionise, game-changing, empower,
   next-gen, cutting-edge, harness, delve, synergy, journey, flywheel, ideate, operationalise, best-in-class,
   world-class, magic.  The check flags them.
-- Write "Tredence", never "TREDENCE" (that's the logo), "Tredence Inc." or "Tredence Analytics".  Tredence's own
-  products and accelerators appear only if the user asks, described by what they do, never as a working product.
-- No Tredence client names, client results, quotes or awards, even as background colour.  Proof points belong in a
-  `pptx-tredence` deck, sourced and dated, not in a concept demo.
+- Use the approved brand name and product terminology from the manifest/summary. Describe capabilities accurately;
+  never imply a concept is a working product.
+- No unapproved client identifiers, results, quotes or awards. Approved company messaging is not permission
+  to disclose customer records or invent proof points; keep illustrative work clearly labelled.
 - Real product names exactly: Microsoft Teams, Outlook, Dynamics 365 Sales, Copilot Studio, Azure AI Foundry,
   Microsoft Fabric, Power BI, SharePoint.  Never invent Microsoft product names or features as if they ship.
 - The agent app is the customer's own: give it a believable name for this customer ("Contoso Assist") and its agent

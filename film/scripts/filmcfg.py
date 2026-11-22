@@ -1,4 +1,4 @@
-"""Shared settings for the prototype-film-tredence film scripts.
+"""Shared settings for the film scripts.
 
 Every script runs from the film's build folder and reads ./film.json, or the file named in $FILM_CONFIG.
 Anything film.json leaves out falls back to DEFAULTS below. Works on Windows, macOS and Linux.
@@ -12,7 +12,7 @@ import tempfile
 
 DEFAULTS = {
     "tmp": "",                          # frames, segment encodes, mix and the final MP4; "" = <system temp>/film-work
-    "home": "",                         # voice profile, Kokoro model, your lexicon; "" = $TREDENCE_HOME or ~/.tredence
+    "home": "",                         # voice profile, Kokoro model, and personal lexicon
     "prototype": {
         "dir": "proto",                 # folder holding the packed prototype (new_film.py copies it here)
         "file": "prototype.html",
@@ -43,6 +43,8 @@ DEFAULTS = {
     "crossfade_s": 0.6,
     "capture": {
         "rate": 0.25,                   # page time runs at this fraction of real time while filming
+        "mode": "frame-clock",
+        "fps": 30,
         "width": 1920,
         "height": 1080,
         "jpeg_quality": 86,
@@ -59,17 +61,20 @@ DEFAULTS = {
     "captions": {
         "enabled": True,
         "file": "film.ass",
-        "font": "Poppins Medium",       # Tredence uses Poppins only; the TTFs are in ./fonts
+        "font": "sans-serif",           # replaced by the installed brand family unless explicitly overridden
         "size": 34,
         "max_chars": 72,
-        "margin_v": 80,                 # keeps the Tredence frame footer (copyright, concept label, T) visible
+        "margin_v": 80,
         "margin_lr": 220,
-        "fontsdir": "fonts",            # relative to the build folder (avoids drive-letter escaping in ffmpeg)
+        "fontsdir": "fonts",
     },
     "output": {"file": "film.mp4", "crf": 19, "preset": "medium", "audio_kbps": 192},
     "review": {"every_s": 7, "cols": 3, "rows": 3},
     # autoplan.py: narration-led timing.  Seconds, film time.
     "pacing": {
+        "spoken_target_wpm": 166,
+        "film_max_wpm": 160,
+        "static_warning_s": 4.0,
         "lead_s": 0.35,                 # a line starts this long after the step that shows what it talks about
         "scene_lead_s": 0.9,            # ... or after a new scene starts (the 0.6 s crossfade plus a beat to look)
         "line_gap_s": 0.4,              # between two lines on the same stop
@@ -99,6 +104,10 @@ def load(path=None):
         with open(path, encoding="utf-8") as f:
             user = json.load(f)
     cfg = _merge(DEFAULTS, user)
+    brand = brand_data()
+    typography = brand.get("typography", {})
+    if "font" not in (user.get("captions") or {}):
+        cfg["captions"]["font"] = typography.get("family") or "sans-serif"
     nc = cfg["narration"]
     if "mp3" in (user.get("narration") or {}) and "audio" not in user["narration"]:
         nc["audio"] = nc["mp3"]
@@ -110,6 +119,39 @@ def load(path=None):
     cfg["tmp"] = os.path.abspath(cfg["tmp"])
     os.makedirs(cfg["tmp"], exist_ok=True)
     return cfg
+
+
+def brand_data():
+    path = os.path.join("brand", "brand.json")
+    if not os.path.exists(path):
+        return {}
+    with open(path, encoding="utf-8") as f:
+        return json.load(f)
+
+
+def runtime_home(cfg):
+    if cfg.get("home"):
+        return cfg["home"]
+    if os.environ.get("PROTOTYPE_FILM_HOME"):
+        return os.environ["PROTOTYPE_FILM_HOME"]
+    if os.environ.get("TREDENCE_HOME"):
+        print("Using legacy TREDENCE_HOME for voice profile and models.")
+        return os.environ["TREDENCE_HOME"]
+    for root in (os.getcwd(), *[str(p) for p in __import__("pathlib").Path.cwd().parents]):
+        generic, legacy = os.path.join(root, ".prototype-film"), os.path.join(root, ".tredence")
+        generic_runtime = any(os.path.exists(os.path.join(generic, x)) for x in ("voice.json", "kokoro", "lexicon.json"))
+        legacy_runtime = any(os.path.exists(os.path.join(legacy, x)) for x in ("voice.json", "kokoro", "lexicon.json"))
+        if legacy_runtime and not generic_runtime:
+            print("Using legacy workspace .tredence for voice profile and models.")
+            return legacy
+        if os.path.isdir(generic):
+            return generic
+    generic = os.path.expanduser("~/.prototype-film")
+    legacy = os.path.expanduser("~/.tredence")
+    if not os.path.exists(generic) and os.path.isdir(legacy):
+        print("Using legacy ~/.tredence for voice profile and models.")
+        return legacy
+    return generic
 
 
 def tmp(cfg, name):

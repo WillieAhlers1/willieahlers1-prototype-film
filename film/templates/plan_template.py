@@ -1,13 +1,13 @@
-# Timing plan skeleton for a Tredence concept film. new_film.py copies it to the build folder as plan.py. Rename
+# Timing plan skeleton for a concept film. new_film.py copies it to the build folder as plan.py. Rename
 # the scene functions and cue ids to match the prototype's scenes and cues.json, then: python plan.py -> plan.json
 # (and a printed timeline). The worked example is examples/woodgrove-sample/plan.py.
 #
 # Fallback only: autoplan.py builds plan.json from narration.txt's stage directions.  Use this hand-written
 # press schedule (with film.json prototype.driven false) only for a prototype older than engine 1.14.
 #
-# A demo usually runs: a Tredence frame cover -> (their world) -> product scenes on the ground
-# -> the business from above (Power BI) -> the Tredence close (from -> to, what it could be worth, one ask)
-# -> the #beyondpossible closing. Graphics segments sit between prototype segments where the story jumps in time
+# A demo usually runs: a branded cover -> (their world) -> product scenes on the ground
+# -> the business from above -> the close (from -> to, what it could be worth, one ask)
+# -> the brand sign-off. Graphics segments sit between prototype segments where the story jumps in time
 # or place (night before, the persona's morning). Delete any segment the story doesn't need.
 #
 # Rules of thumb:
@@ -19,7 +19,7 @@
 #   scene crossfade.
 # - Presses are only for beats that wait for the presenter. data-auto beats play by themselves: leave time for
 #   them (the prototype checker's contact sheets show where each scene stops).
-# - A scene ends 0.7-0.9 s after its last line; the close holds about 2 s on the ask, and the #beyondpossible
+# - A scene ends 0.7-0.9 s after its last line; the close holds about 2 s on the ask, and the
 #   closing scene holds 3-4 s with no narration while the music fades.
 # - Segments crossfade for 0.6 s; plan.write() asserts that no two cues overlap.
 from planlib import Plan
@@ -28,7 +28,7 @@ P = Plan()
 E = P.E
 
 
-# ---------- P1: Tredence cover + their world (prototype opened at its first scene) ----------
+# ---------- P1: brand cover + their world (prototype opened at its first scene) ----------
 def cover():
     return [("A1", 1.0)], [], E("A1", 1.0) + 0.8          # cover on screen: who it's for, fictional data stated
 
@@ -79,7 +79,7 @@ def close():
 
 
 def closing():
-    return [], [], 3.5                                        # #beyondpossible sign-off, no narration, music fades
+    return [], [], 3.5                                        # brand sign-off, no narration, music fades
 
 
 # add one function per scene between ask and close (G..L cues), in the prototype's scene order

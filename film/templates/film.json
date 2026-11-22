@@ -19,7 +19,7 @@
   "cues": "cues.json",
   "plan": "plan.json",
   "crossfade_s": 0.6,
-  "capture": {"rate": 0.25, "width": 1920, "height": 1080, "jpeg_quality": 86},
+  "capture": {"mode": "frame-clock", "fps": 30, "rate": 0.25, "width": 1920, "height": 1080, "jpeg_quality": 86},
   "graphics": {
     "file": "graphics.html",
     "simdata": "simdata.json",
@@ -34,9 +34,9 @@
       "counter_baseline": 2000,
       "phase": {"baseline": "<Today's order, e.g. Arrival order>", "search": "Trying <N> orders", "optimized": "<Engine name> order"},
       "stats": [
-        {"label": "<Primary outcome, e.g. Deadline cases on time>", "left": 560, "before_color": "#f48120",
+        {"label": "<Primary outcome, e.g. Deadline cases on time>", "left": 560,
          "before": "{t[today_order][ontime_files]:.1f} of <total>", "after": "{t[iq_order][ontime_files]:.0f} of <total>"},
-        {"label": "<Value metric, e.g. Expected to fund>", "left": 1010, "before_color": "#ffffff",
+        {"label": "<Value metric, e.g. Expected to fund>", "left": 1010,
          "before": "${t[today_order][ev_m]:.2f}M", "after": "${t[iq_order][ev_m]:.2f}M"}
       ],
       "late_share": 0.4,
@@ -69,7 +69,7 @@
   },
   "music": {"file": "music.wav", "seed": 7},
   "mix": {"file": "mix.wav", "music_db": -14, "voice_lufs": -16, "limit": 0.89},
-  "captions": {"enabled": true, "file": "film.ass", "font": "Poppins Medium", "size": 34, "max_chars": 72, "margin_v": 80},
+  "captions": {"enabled": true, "file": "film.ass", "size": 34, "max_chars": 72, "margin_v": 80},
   "output": {"file": "film.mp4", "crf": 19},
   "review": {"every_s": 7}
 }

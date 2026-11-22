@@ -1,8 +1,8 @@
 # Narration: story and voice
 
-The narration is the presenter's voice, recorded.  It tells the prototype's story in the Tredence customer voice,
-and every line is something a Tredence lead would say out loud across the table.  The voice guide behind it is a
-draft (pptx-tredence `references/tredence-voice.md`), pending review by a Tredence brand or communications owner.
+The narration is the presenter's voice, recorded.  It tells the prototype's story in the approved customer voice,
+and every line is something a presenter would say out loud across the table. Use the approved workspace
+summary for tone, messaging and provenance; no separate brand-specific deck skill is required.
 
 ## From the brief to the film
 
@@ -20,7 +20,7 @@ The prototype's `brief.md` already holds the story (the storyboard questions' an
 
 A typical shape (a shape, not a template): the cover and their world → the night before (establishing shot, the
 simulation if there's an engine) → what the agent prepared → the person's morning → the product scenes, on the
-ground → the business from above → the close and the ask → the #beyondpossible sign-off, with music only.
+ground → the business from above → the close and the ask → the configured sign-off sign-off, with music only.
 
 ## Stage directions
 
@@ -35,7 +35,7 @@ draft from the prototype's `data-note` lines: keep its directions, rewrite its l
 - **Write for the ear.**  Short sentences.  Say what happens and who decides.  No aphorisms, no rhetorical
   questions, no "imagine a world".
 - **The first line** says whose concept this is, for whom, whom we follow, and that the company, people and numbers
-  are fictional: "This is a concept from Tredence for small-business lending.  We'll follow one credit analyst,
+  are fictional: "This is a concept from the presenting brand for small-business lending.  We'll follow one credit analyst,
   Adele Vance, at Woodgrove Bank.  The bank, the people and the numbers are fictional."
 - **Name the customer** (their real company) only if the user confirmed it's allowed, the same rule as the
   prototype's cover tag.  Otherwise name the industry.  Inside the story, the company is always the prototype's
@@ -66,7 +66,7 @@ draft from the prototype's `data-note` lines: keep its directions, rewrite its l
 
 ## Words
 
-The Tredence voice, spoken.  `check_film.py` blocks the left column (and the same AI-tell list as the prototype checker).
+The approved brand voice, spoken.  `check_film.py` blocks the left column (and the same AI-tell list as the prototype checker).
 
 | Never | Say instead |
 |---|---|
@@ -77,17 +77,17 @@ The Tredence voice, spoken.  `check_film.py` blocks the left column (and the sam
 | empower, enable your organisation | your team can now … |
 | seamless, best-in-class, world-class, game-changing, cutting-edge, revolutionary | a specific result, labelled illustrative |
 | synergy, harness, delve, magic | say the plain thing |
-| "TREDENCE", "Tredence Inc.", "Tredence Analytics" | Tredence |
+| invented or unapproved brand variants | the approved name from the workspace manifest |
 | exclamation marks | a full stop |
 
 Product names are used accurately and only as the prototype shows them: "Teams", "Outlook", "Power BI",
 "Dynamics 365", "Copilot Studio", "Microsoft Fabric".  The agent app is the customer's own (its name from the
-prototype, "Woodgrove Assist"), never "Copilot"; say "the agent" or the agent's name.  Never "Microsoft 365 Copilot".  Tredence products and
+prototype, "Woodgrove Assist"), never "Copilot"; say "the agent" or the agent's name.  Never "Microsoft 365 Copilot".  the presenting brand products and
 accelerators only if the user asks, by what they do.
 
 ## Before and after
 
-> ✗ Woodgrove is on a transformation journey.  With Tredence's best-in-class agents, analysts are empowered to
+> ✗ Woodgrove is on a transformation journey.  With the presenting brand's best-in-class agents, analysts are empowered to
 > unlock seamless decisioning!
 
 > ✓ Adele's queue runs in arrival order, but the customer deadlines live in notes and emails.  At two in the

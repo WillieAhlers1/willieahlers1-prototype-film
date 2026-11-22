@@ -10,6 +10,9 @@ Usage (from the build folder):
   python voice.py --listen              transcribe each voiced line offline (faster-whisper) and flag words that
                                         didn't come out as written
   python voice.py --engine azure|sapi|say|kokoro   override the profile for one run
+  python voice.py --use olivia --authorize-cloud  save the optional Azure preset and consent
+  python voice.py --preset olivia --audition --authorize-cloud
+                                        audition Olivia without saving a profile
 
 Engines:
 - kokoro (default): Kokoro-82M, open weights (Apache-2.0), fully offline, deterministic (same text and settings,
@@ -22,8 +25,9 @@ Engines:
 Pronunciation: every line goes through speech.py first (numbers and abbreviations written for the ear, then the
 lexicon: shared, yours in <home>, and this film's lexicon.json).  Words no list covers are printed as "check".
 
-<home> is film.json "home" (new_film.py sets it to <workspace>/.tredence when it finds one), else $TREDENCE_HOME,
-else ~/.tredence.  In Claude Cowork, keep it in the workspace folder so the model and profile survive sessions.
+<home> is film.json "home", else $PROTOTYPE_FILM_HOME or a workspace .prototype-film. Existing TREDENCE_HOME,
+.tredence profiles and models are retained when no generic runtime profile exists. Consent, never credentials,
+may be saved in voice.json. Azure requires explicit consent and credentials; it does not fall back silently.
 
 Each line is cached in voice/ by engine, voice, speed and spoken text, so after editing one line only that line is
 re-voiced.  Lines are trimmed of edge silence, levelled to the same loudness and joined with narration.gap_s.
@@ -43,11 +47,14 @@ import tempfile
 import urllib.request
 import wave
 from pathlib import Path
-from xml.sax.saxutils import escape
+from xml.sax.saxutils import escape, quoteattr
 
-import numpy as np
+try:
+    import numpy as np
+except ImportError:
+    np = None
 
-from filmcfg import load
+from filmcfg import load, runtime_home
 import speech
 
 SR = 48000
@@ -57,11 +64,15 @@ KOKORO_FILES = {
 }
 AUDITION_VOICES = ["af_heart", "am_michael", "am_fenrir", "bf_emma", "bm_george", "af_bella"]
 DEFAULT_PROFILE = {"engine": "kokoro", "name": "af_heart", "speed": 1.0, "lang": "en-us"}
+PRESETS = {
+    "ftg": {"engine": "azure", "name": "en-GB-OliviaNeural", "speed": 1.0, "lang": "en-GB"},
+    "olivia": {"engine": "azure", "name": "en-GB-OliviaNeural", "speed": 1.0, "lang": "en-GB"},
+}
 
 
 # ---------- where things live ----------
 def home_dir(cfg):
-    h = cfg.get("home") or os.environ.get("TREDENCE_HOME") or str(Path.home() / ".tredence")
+    h = runtime_home(cfg)
     p = Path(h).expanduser(); p.mkdir(parents=True, exist_ok=True)
     return p
 
@@ -125,7 +136,8 @@ def kokoro(text, P, ipa, home, dest):
     write_wav(dest, resample(np.asarray(a, dtype=np.float32) * 32767, sr))
 
 
-def azure(text, P, dest):
+def azure(text, P, dest, ipa=None):
+    check_azure(P)
     key = os.environ.get("SPEECH_KEY") or os.environ.get("AZURE_SPEECH_KEY")
     region = os.environ.get("SPEECH_REGION") or os.environ.get("AZURE_SPEECH_REGION")
     url = os.environ.get("SPEECH_ENDPOINT") or (region and f"https://{region}.tts.speech.microsoft.com/cognitiveservices/v1")
@@ -134,13 +146,30 @@ def azure(text, P, dest):
     voice = P.get("azure_name") or (P["name"] if "Neural" in P["name"] else "en-US-AndrewNeural")
     lang = "-".join(voice.split("-")[:2])
     rate = P.get("rate") or f"{round((float(P.get('speed', 1.0)) - 1) * 100):+d}%"
-    ssml = (f"<speak version='1.0' xmlns='http://www.w3.org/2001/10/synthesis' xml:lang='{lang}'>"
-            f"<voice name='{voice}'><prosody rate='{rate}'>{escape(text)}</prosody></voice></speak>")
+    parts = []
+    pos = 0
+    rx = speech._rx(ipa or {})
+    for match in rx.finditer(text) if rx else ():
+        parts.append(escape(text[pos:match.start()]))
+        parts.append(f"<phoneme alphabet='ipa' ph={quoteattr(ipa[match.group(0)])}>{escape(match.group(0))}</phoneme>")
+        pos = match.end()
+    parts.append(escape(text[pos:]))
+    ssml = (f"<speak version='1.0' xmlns='http://www.w3.org/2001/10/synthesis' xml:lang={quoteattr(lang)}>"
+            f"<voice name={quoteattr(voice)}><prosody rate={quoteattr(rate)}>{''.join(parts)}</prosody></voice></speak>")
     req = urllib.request.Request(url, data=ssml.encode("utf-8"), method="POST", headers={
         "Ocp-Apim-Subscription-Key": key, "Content-Type": "application/ssml+xml",
         "X-Microsoft-OutputFormat": "riff-48khz-16bit-mono-pcm", "User-Agent": "prototype-film-tredence"})
-    with urllib.request.urlopen(req, timeout=60) as r:
-        open(dest, "wb").write(r.read())
+    with urllib.request.urlopen(req, timeout=60) as r, open(dest, "wb") as out:
+        out.write(r.read())
+
+
+def check_azure(P):
+    if P.get("cloud_authorized") is not True:
+        raise SystemExit("Azure speech requires explicit consent: use --authorize-cloud (save with --use).")
+    key = os.environ.get("SPEECH_KEY") or os.environ.get("AZURE_SPEECH_KEY")
+    region = os.environ.get("SPEECH_REGION") or os.environ.get("AZURE_SPEECH_REGION")
+    if not key or not (region or os.environ.get("SPEECH_ENDPOINT")):
+        raise SystemExit("Azure AI Speech needs SPEECH_KEY and SPEECH_REGION (or SPEECH_ENDPOINT).")
 
 
 def sapi(text, P, dest):
@@ -231,7 +260,7 @@ def synth(engine, text, P, ipa, home, dest):
     if engine == "kokoro":
         kokoro(text, P, ipa, home, dest)
     elif engine == "azure":
-        azure(text, P, dest)
+        azure(text, P, dest, ipa)
     elif engine == "sapi":
         sapi(text, P, dest)
     elif engine == "say":
@@ -245,8 +274,8 @@ def audition(cfg, home, P, voices, text, say_, ipa):
     if not text:
         lines = speech.read_script(cfg["narration"]["script"], cfg["narration"]["prefix"]) \
             if os.path.exists(cfg["narration"]["script"]) else []
-        text = " ".join(lines[:2]) or ("This is a concept from Tredence. We'll follow one planner, Adele Vance, at "
-                                      "Contoso. Her first order is due by 11:30, worth $1.17M, and the ERP shows none of it.")
+        text = " ".join(lines[:2]) or ("This is a concept. We'll follow one planner through a fictional working day. "
+                                      "Her first order is due by 11:30, worth $1.17M.")
     sp = speech.spoken(text, say_)
     print("sample:", sp)
     for v in voices:
@@ -291,6 +320,8 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("script", nargs="?", default=NC.get("script", "narration.txt"))
     ap.add_argument("--engine", choices=["kokoro", "azure", "sapi", "say"])
+    ap.add_argument("--preset", choices=sorted(PRESETS))
+    ap.add_argument("--authorize-cloud", action="store_true", help="consent to sending narration to Azure, saved with --use")
     ap.add_argument("--voice")
     ap.add_argument("--speed", type=float)
     ap.add_argument("--setup", action="store_true")
@@ -304,6 +335,12 @@ def main():
     if a.setup:
         return setup(home)
     P = profile(cfg, home)
+    if a.preset:
+        P.pop("azure_name", None)
+        P.pop("rate", None)
+        P.update(PRESETS[a.preset])
+    if a.authorize_cloud:
+        P["cloud_authorized"] = True
     if a.engine:
         P["engine"] = a.engine
     if a.voice:
@@ -311,14 +348,25 @@ def main():
     if a.speed:
         P["speed"] = a.speed
     if a.use:
-        saved = dict(P, name=a.use)
+        allowed = {"engine", "name", "speed", "lang", "rate", "azure_name", "sapi_rate", "say_name", "cloud_authorized"}
+        saved = {k: v for k, v in P.items() if k in allowed}
+        saved["name"] = PRESETS[a.use]["name"] if a.use in PRESETS else a.use
+        if a.use in PRESETS:
+            saved.pop("azure_name", None)
+            saved.pop("rate", None)
+            saved.update(PRESETS[a.use])
         json.dump(saved, open(home / "voice.json", "w", encoding="utf-8"), indent=1)
-        return print("voice profile saved:", home / "voice.json", saved)
+        return print("voice profile saved:", home / "voice.json")
+    if P["engine"] == "azure":
+        check_azure(P)
+    if np is None:
+        raise SystemExit("Audio processing needs numpy: pip install numpy")
     say_, ipa = speech.load_lexicon(str(home))
-    if P["engine"] != "kokoro":
-        ipa = {}                                   # phonemes are Kokoro's; other engines get the respellings only
+    if P["engine"] not in ("kokoro", "azure"):
+        ipa = {}
     if a.audition:
-        return audition(cfg, home, P, (a.voices.split(",") if a.voices else AUDITION_VOICES), a.text, say_, ipa)
+        voices = a.voices.split(",") if a.voices else ([P["name"]] if P["engine"] != "kokoro" else AUDITION_VOICES)
+        return audition(cfg, home, P, voices, a.text, say_, ipa)
 
     lines = speech.read_script(a.script, NC["prefix"])
     ids = NC["cue_ids"] or [f"C{k + 1:02d}" for k in range(len(lines))]
@@ -331,7 +379,7 @@ def main():
         sp = speech.spoken(text, say_)
         for w in speech.suspects(text, say_, ipa):
             check.setdefault(w, []).append(cid)
-        key = f"{P['engine']}|{P['name']}|{P.get('speed')}|{P.get('lang')}|{sp}|{json.dumps(ipa, sort_keys=True) if P['engine'] == 'kokoro' else ''}"
+        key = f"{P['engine']}|{P['name']}|{P.get('speed')}|{P.get('lang')}|{P.get('rate')}|{P.get('azure_name')}|{sp}|{json.dumps(ipa, sort_keys=True) if P['engine'] in ('kokoro', 'azure') else ''}"
         f = os.path.abspath(os.path.join("voice", f"{cid}-{hashlib.sha1(key.encode()).hexdigest()[:12]}.wav"))
         if not os.path.exists(f):
             print("voicing", cid, sp[:70], flush=True)
@@ -350,7 +398,8 @@ def main():
     write_wav(NC["audio"], audio)
     with open(NC["transcript"], "w", encoding="utf-8") as fo:
         fo.write("".join(f"{NC['prefix']}{x}\n" for x in lines))
-    json.dump(cues, open(cfg["cues"], "w", encoding="utf-8"), indent=1, ensure_ascii=False)
+    with open(cfg["cues"], "w", encoding="utf-8") as out:
+        json.dump(cues, out, indent=1, ensure_ascii=False)
     if P["engine"] in ("sapi", "say"):
         print(f"SCRATCH VOICE ({P['engine']}): for timing drafts only. Re-voice with Kokoro before delivery.")
     print(f"{len(lines)} lines, {t:.1f} s, voice {P['engine']}:{P['name']} x{P.get('speed', 1.0)} ->",

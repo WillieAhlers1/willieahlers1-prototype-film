@@ -30,7 +30,7 @@ stops *are* the film's shots.
   Move a key button or number up rather than shrinking the captions.
 - **Counters (`data-count`) out of wrapping text**: a changing width moves the layout mid-shot.
 - **A cover and a close as frame scenes** if the story uses them: the film opens on the cover's line (whose concept,
-  for whom, fictitious) and ends on the close's ask, then the #beyondpossible sign-off.
+  for whom, fictitious) and ends on the close's ask, then the configured sign-off sign-off.
 - **Mind the length.**  Count the stops: at roughly 6-8 seconds a stop, 20-28 stops make a 2:30-3:30 film.  A live
   demo can have more; the film then skips stops (they play through unnarrated), so put the essential ones first.
 
@@ -43,7 +43,7 @@ wanted yet:
 |---|---|---|---|---|---|---|
 
 - **Stage**: the design-thinking stage the scene serves (Empathize, Define, Ideate, Prototype, Test; see SKILL.md
-  §Storyboard questions).  A story that skips Empathize (whose day, what's hard) or Test (what we'd measure) feels
+  §One concept confirmation). A story that skips whose day/what's hard or what we'd measure feels
   like a feature tour.
 - **Stop seconds**: the time the line needs (characters ÷ 15) or the stop needs on screen, whichever is longer.  The
   column's total is the film's length within about 15 %.
@@ -53,3 +53,8 @@ wanted yet:
 `python <skill>/assets/film_ready.py working/<name>/dist/<name>.html --target 3:00` after packing: scene ids,
 missing notes, notes too long to speak, streaming longer than its line, no hold, and the estimated length.  It
 writes `film-draft.txt` beside the HTML.
+
+Once voice cues exist, plan against their measured duration rather than this draft estimate.
+Report spoken rate (target around 166 words/minute) separately from complete film pace (at most 160).
+Allow screen-reading/settling time without slowing footage or adding empty holds merely to meet the threshold.
+If the requested duration cannot fit readable content, revise the story or get approval for a longer cut.

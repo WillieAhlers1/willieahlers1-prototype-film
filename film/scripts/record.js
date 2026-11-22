@@ -18,6 +18,7 @@ function config() {
   return {
     tmp: c.tmp || path.join(os.tmpdir(), 'film-work'), plan: c.plan || 'plan.json',
     rate: cap.rate || 0.25, w: cap.width || 1920, h: cap.height || 1080, q: cap.jpeg_quality || 86,
+    mode: cap.mode || 'frame-clock',
     gfxSettle: cap.gfx_settle_ms ?? 4000, preRoll: cap.pre_roll_ms ?? 1500, chrome: cap.chrome || '',
     protoDir: pr.dir || 'proto', protoFile: pr.file || 'prototype.html', warmup: (pr.warmup_s ?? 30) * 1000,
     filmCss: pr.film_css ?? FILM_CSS,
@@ -41,6 +42,13 @@ module.exports = { config, launch };
 
 if (require.main === module) (async () => {
   const cfg = config(), RATE = cfg.rate;
+  const flag = process.argv.indexOf('--capture-mode');
+  const mode = flag >= 0 ? process.argv[flag + 1] : cfg.mode;
+  if (process.argv.includes('--preview'))
+    throw new Error('Node compatibility recorder cannot render previews; use Python record.py');
+  if (mode !== 'compatibility')
+    throw new Error('Node recorder supports only --capture-mode compatibility; install Python Playwright for frame-clock capture');
+  console.log('capture mode: compatibility (wall-clock CDP screencast; not frame-clock capture)');
   const plan = JSON.parse(fs.readFileSync(cfg.plan, 'utf8'));
   const seg = plan.segments.find(s => s.name === process.argv[2]);
   if (!seg) throw new Error(`no segment ${process.argv[2]} in ${cfg.plan}`);
@@ -87,7 +95,7 @@ if (require.main === module) (async () => {
   }
   const endDue = T0 + ((seg.dur + 0.4) / RATE) * 1000; if (endDue > Date.now()) await p.waitForTimeout(endDue - Date.now());
   await s.send('Page.stopScreencast');
-  fs.writeFileSync(path.join(OUT, 'meta.json'), JSON.stringify({ T0: T0 / 1000, ts, dur: seg.dur, rate: RATE }));
+  fs.writeFileSync(path.join(OUT, 'meta.json'), JSON.stringify({ mode: 'compatibility', T0: T0 / 1000, ts, dur: seg.dur, rate: RATE }));
   console.log(seg.name, 'frames', n);
   await b.close();
 })();

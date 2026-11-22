@@ -27,14 +27,27 @@ def esc(p):
 
 
 if step in ("segs", "all"):
-    FPS = 30
     for s in plan["segments"]:
         if only and s["name"] not in only:
             continue
         fdir = tmp(cfg, f"frames_{s['name']}")
         m = json.load(open(os.path.join(fdir, "meta.json"), encoding="utf-8")); dur = s["dur"]
+        FPS = m.get("fps", cfg["capture"].get("fps", 30))
+        if not isinstance(FPS, int) or isinstance(FPS, bool) or FPS <= 0:
+            raise SystemExit("capture fps must be a positive integer")
+        if m.get("mode") == "frame-clock":
+            expected = math.ceil(dur * FPS - 1e-9)
+            if m.get("dur") != dur or m.get("frame_count") != expected or len(m.get("ts", [])) != expected:
+                raise SystemExit(f"frame-clock metadata does not match plan for {s['name']}; re-record it")
+            if any(abs(t - k / FPS) > 1e-9 for k, t in enumerate(m["ts"])):
+                raise SystemExit(f"invalid frame-clock timestamps for {s['name']}")
+            print(f"seg {s['name']}: frame-clock {FPS} fps", flush=True)
+        else:
+            print(f"seg {s['name']}: compatibility wall-clock resampling", flush=True)
         R = m.get("rate", cfg["capture"]["rate"])
         ft = [(t - m["T0"]) * R for t in m["ts"]]          # frame times back on the film clock
+        if not ft:
+            raise SystemExit(f"no recorded frames for {s['name']}")
         # Constant frame rate by resampling: output frame k (at k/FPS) shows the latest capture at or before it.
         # (Per-frame durations in a concat list stretch the timeline when captures come faster than 25 a second.)
         j = max([i for i, t in enumerate(ft) if t <= 0] or [0])
@@ -43,7 +56,7 @@ if step in ("segs", "all"):
                               "-c:v", "libx264", "-preset", "ultrafast", "-crf", "12", tmp(cfg, f"{s['name']}.mp4")],
                              stdin=subprocess.PIPE)
         cur = None; data = b""
-        for k in range(int(math.ceil(dur * FPS)) + 1):
+        for k in range(math.ceil(dur * FPS - 1e-9)):
             while j + 1 < len(ft) and ft[j + 1] <= k / FPS:
                 j += 1
             if j != cur:

@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>[[Customer]] · [[scenario]] (concept)</title>
+<script src="brand.js"></script>
+<script src="kit/proto-style.js"></script>
+<link rel="stylesheet" href="brand.css">
+<style>
+/* This prototype's own styles: views you design for this story, anything the kit doesn't have.
+   Product scenes: build from the Fluent tokens (--bg1, --fg1, --brand, --sh4, radius 4/8 ...).
+   Frame scenes: use the approved brand palette and font. Never edit kit/. */
+</style>
+</head>
+<!-- data-concept is the always-on label.  Keep it honest: it must say concept and fictitious data. -->
+<body data-concept="Concept demo · Fictitious data">
+<main class="stage">
+
+<!-- STARTER: branded frame styles and wiring, not a plot or wording to reuse. Keep, change or delete
+     these cover, close and optional sign-off examples; design everything between them for this customer.
+     Replace every double-bracket placeholder. Product outlines: shells.html. Frame layouts: frames.html.
+     Keep brand frames and product looks apart. -->
+
+<!-- 1. Cover. The change for the business, in the customer's words: the
+     tension they live with, or what becomes possible.  Not a product tagline or a list of what the demo shows.
+     The brand logo, tagline and footer are generated from the approved snapshot. -->
+<section class="scene frame bf-cover" id="cover" data-title="Cover">
+  <div class="bf-photo"></div>
+  <div class="bf-shade" style="--a0:.7;--a1:.2"></div>
+  <p class="bf-abs bf-cover-tag" style="left:88.5px;top:215px">[[Customer]]</p>
+  <h1 class="bf-abs bf-cover-title" style="left:64.5px;top:292px;width:1500px">[[The business change,]]<br>[[in their words]]</h1>
+  <p class="bf-abs bf-cover-sub" style="left:64.5px;top:460px;width:1500px">[[The tension they live with today, in one line]]</p>
+  <p class="bf-abs bf-cover-sub" style="left:64.5px;top:690px;font-size:24px;font-weight:500;white-space:nowrap">Illustrative concept · [[Month YYYY]]</p>
+  <aside class="notes">[[What the presenter says first: the tension, and why it matters to the leader who owns it]]</aside>
+</section>
+
+<!-- Product scenes go here. Copy the chrome a beat needs from shells.html: the agent app (home, chat, work trace, multi-step plan),
+     browser proof, Teams, Outlook, Dynamics 365, Power BI or the customer's own app.
+     Use class="scene zoom". The story chooses the screens and their order. -->
+
+<!-- Close (brand frame, content layout). How the business could work (from -> to), what it could be worth
+     (rounded, labelled Illustrative, basis in the notes), and an ask only if the meeting needs one.  Never a recap of the scenes, a checklist
+     against the brief, or a feature list.  Text sits in its own absolutely positioned element over empty boxes. -->
+<section class="scene frame bf-content" id="close" data-title="Close">
+  <p class="bf-abs bf-kicker" style="left:50px;top:75px">[[What could change]]</p>
+  <h2 class="bf-abs bf-title" style="left:50px;top:115px;width:1760px">[[What the business could become,]] <span class="bf-hl">[[in their words]]</span></h2>
+
+  <div class="bf-card" style="left:50px;top:330px;width:820px;height:280px"></div>
+  <p class="bf-abs bf-label" style="left:90px;top:370px">Today</p>
+  <p class="bf-abs bf-callout" style="left:90px;top:415px;width:740px">[[How it works today, in operating terms: who is served, how often, how fast]]</p>
+
+  <div class="bf-ico" style="left:932px;top:442px;width:56px;height:56px" data-beat="1"><i class="ic" data-icon="arrow_right"></i></div>
+
+  <div class="bf-tint" style="left:1050px;top:330px;width:820px;height:280px" data-beat="1"></div>
+  <div class="bf-accent" style="left:1050px;top:330px;height:280px" data-beat="1"></div>
+  <p class="bf-abs bf-label" style="left:1098px;top:370px" data-beat="1">With agents</p>
+  <p class="bf-abs bf-callout" style="left:1098px;top:415px;width:730px" data-beat="1">[[How it could work: the same people, doing what they couldn't before]]</p>
+
+  <p class="bf-abs bf-stat" style="left:50px;top:680px;font-size:72px" data-beat="1">[[Rounded value]]</p>
+  <p class="bf-abs bf-stat-label" style="left:50px;top:775px;width:900px" data-beat="1">[[The measure that moves, and for whom]]</p>
+  <p class="bf-abs bf-small" style="left:50px;top:815px;width:900px" data-beat="1">Illustrative · [[basis in one line]]</p>
+
+  <div class="bf-abs" style="left:1050px;top:705px" data-beat="2"><span class="bf-cta">[[An ask, only if the meeting needs one]] <i class="ic" data-icon="arrow_right"></i></span></div>
+  <aside class="notes">[[How the presenter closes: the shift, what it's worth and its basis, the ask]]</aside>
+</section>
+
+<!-- Sign-off (brand frame, closing layout). Optional; it follows the ask, never replaces it. -->
+<section class="scene frame bf-closing" id="closing" data-title="Thank you">
+  <aside class="notes">[[Thank the room; repeat the one ask if they haven't answered it]]</aside>
+</section>
+
+</main>
+<script src="kit/icons.js"></script>
+<script src="kit/proto.js"></script>
+</body>
+</html>
